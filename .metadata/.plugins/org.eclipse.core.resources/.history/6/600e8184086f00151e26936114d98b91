@@ -1,0 +1,16 @@
+package server;
+
+
+public class ProtocolReturn {
+	public ProtocolReturn(String methodName, Object[] result, int id, ProtocolError error) {
+		super();
+		this.methodName = methodName;
+		this.result = result;
+		Id = id;
+		this.error = error;
+	}
+	public String methodName;
+	public Object[] result;
+	public int Id;
+	public ProtocolError error;
+}

@@ -1,0 +1,54 @@
+package controller;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+
+import peer.MethodReceiverInterface;
+import peer.PeerConnection;
+import peer.PeerConnectionReader;
+import protocol.ProtocolMethod;
+import server.ServerConnection;
+import server.ServerConnectionReader;
+
+public class PeerService {
+	private PeerConnection connection;
+	private PeerConnectionReader reader;
+
+	/**
+	 * Create a peer communicate with peer
+	 * @param conn Peer connection
+	 * @throws IOException Something went wrong
+	 */
+	public PeerService(PeerConnection conn) throws IOException {
+		connection = conn;
+		reader = new PeerConnectionReader(conn);
+		// Start connection
+		Thread serverThread = new Thread(conn);
+		serverThread.start();
+		
+		Thread readThread = new Thread(reader);
+		readThread.start();
+	}
+	
+	public void addMethodListener(MethodReceiverInterface receiverInterface){
+		reader.addMethodReceiver(receiverInterface);
+	}
+	
+	public void accept() throws InterruptedException{
+		ProtocolMethod method = new ProtocolMethod("accept", new Object[0], 0);
+		connection.write(method);
+	}
+	
+	public void sendMessage(String text) throws InterruptedException{
+		String[] param = new String[2];
+		param[0] = "utf-8";
+		param[1] = text;
+		ProtocolMethod method = new ProtocolMethod("sendMessage", param, 0);
+		connection.write(method);
+	}
+
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+}

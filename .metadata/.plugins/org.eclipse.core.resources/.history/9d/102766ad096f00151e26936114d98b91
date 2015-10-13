@@ -1,0 +1,15 @@
+package server;
+
+import org.json.JSONObject;
+
+public class ProtocolError {
+	public JSONObject toJson(){
+		return null;
+	}
+	
+	@Override
+	public String toString() {
+		// TODO Auto-generated method stub
+		return super.toString();
+	}
+}

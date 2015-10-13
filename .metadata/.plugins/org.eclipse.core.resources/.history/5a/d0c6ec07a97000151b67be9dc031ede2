@@ -1,0 +1,22 @@
+package controller;
+
+import client.ServerConnection;
+import protocol.ProtocolMethod;
+
+public class ServerService {
+	private ServerConnection connection;
+	
+	public ServerService(ServerConnection conn) {
+		connection = conn;
+	}
+	
+	public void login(String username, String password, CallbackInteface callback){
+		String[] param = new String[2];
+		param[0] = tb_username.getText();
+		param[1] = tb_password.getText();
+		
+		ProtocolMethod p = new ProtocolMethod("login", param, 100);
+		System.out.println(p.toString());
+		scClient.write(p);
+	}
+}

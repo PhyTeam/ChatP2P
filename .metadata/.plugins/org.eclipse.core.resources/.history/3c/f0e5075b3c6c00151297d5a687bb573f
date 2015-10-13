@@ -1,0 +1,170 @@
+package gui;
+
+import java.awt.Event;
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+
+import server.ChatServer;
+
+import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.io.IOException;
+import javax.swing.JTextField;
+
+import client.ChatClient;
+
+import javax.swing.JLabel;
+
+public class MainGUI implements MouseListener, Cónummerinterface{
+	private JFrame frame;
+	private Thread thread = null;
+	private JTextField tb_ip;
+	private JTextField tb_port;
+	JLabel lblNa;
+	JButton btnOnline;
+	private JButton btnOffline;
+	// Server
+	ChatServer chatServer;
+	private JButton btnConnect;
+	private ChatClient chatClient;
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainGUI window = new MainGUI();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public MainGUI() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		btnOnline = new JButton("Online");
+		btnOnline.addMouseListener(this);
+		btnOnline.setBounds(198, 156, 89, 23);
+		frame.getContentPane().add(btnOnline);
+		
+		tb_ip = new JTextField();
+		tb_ip.setBounds(188, 58, 236, 20);
+		frame.getContentPane().add(tb_ip);
+		tb_ip.setColumns(10);
+		
+		tb_port = new JTextField();
+		tb_port.setColumns(10);
+		tb_port.setBounds(188, 89, 236, 20);
+		frame.getContentPane().add(tb_port);
+		
+		JLabel lblIp = new JLabel("ip");
+		lblIp.setBounds(132, 61, 46, 14);
+		frame.getContentPane().add(lblIp);
+		
+		JLabel lblPort = new JLabel("port");
+		lblPort.setBounds(132, 92, 46, 14);
+		frame.getContentPane().add(lblPort);
+		
+		lblNa = new JLabel("N/A");
+		lblNa.setBounds(10, 11, 296, 23);
+		frame.getContentPane().add(lblNa);
+		
+		btnOffline = new JButton("Offline");
+		btnOffline.addMouseListener(null);
+		btnOffline.setBounds(297, 156, 89, 23);
+		frame.getContentPane().add(btnOffline);
+		btnOffline.addMouseListener(this);
+		btnConnect = new JButton("Connect");
+		btnConnect.setBounds(188, 120, 236, 23);
+		frame.getContentPane().add(btnConnect);
+		btnConnect.addMouseListener(this);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(e.getSource() == btnOnline && btnOnline.isEnabled()) onClickOnline(e);
+		if(e.getSource() == btnOffline && btnOffline.isEnabled()) onClickOffline(e);
+		if(e.getSource() == btnConnect && btnConnect.isEnabled()) onClickConnect(e);
+	}
+
+	private void onClickOffline(MouseEvent e) {
+		if(chatServer != null)
+			chatServer.close();
+		btnOffline.setEnabled(false);
+		btnOnline.setEnabled(true);
+	}
+
+	public void onClickOnline(MouseEvent e)
+	{
+		// Create server
+		int port = 5000;
+		ChatServer s = null;
+		for(int i = 0; i < 5; i++)
+		{
+			try {
+				s = new ChatServer(port + i);
+				break;
+			} catch (IOException ew) {
+				// Do nothing
+				System.out.print("try " + i);
+			}
+		}
+		if(s == null) JOptionPane.showMessageDialog(null, "Can't create connect","Error", JOptionPane.ERROR_MESSAGE );
+		Thread t = new Thread(s);
+		t.start();
+		lblNa.setText(s.getServerInfo());
+		btnOnline.setEnabled(false);
+		btnOffline.setEnabled(true);
+	}
+	
+	public void onClickConnect(MouseEvent e)
+	{
+		chatClient = new ChatClient(tb_ip.getText(), Integer.parseInt(tb_port.getText()));
+		Thread t = new Thread(chatClient);
+		t.start();
+	}
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+}

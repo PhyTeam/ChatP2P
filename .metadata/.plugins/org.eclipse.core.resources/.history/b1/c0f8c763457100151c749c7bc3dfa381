@@ -1,0 +1,40 @@
+package controller;
+
+import java.io.IOException;
+import java.lang.reflect.Method;
+
+import peer.PeerConnection;
+import peer.PeerConnectionReader;
+import protocol.ProtocolMethod;
+import server.ServerConnection;
+import server.ServerConnectionReader;
+
+public class PeerService {
+	private PeerConnection connection;
+	private PeerConnectionReader reader;
+
+	/**
+	 * Create a peer communicate with peer
+	 * @param conn Peer connection
+	 * @throws IOException Something went wrong
+	 */
+	public PeerService(PeerConnection conn) throws IOException {
+		connection = conn;
+		reader = new PeerConnectionReader(conn);
+		// Start connection
+		Thread serverThread = new Thread(conn);
+		serverThread.start();
+		
+		Thread readThread = new Thread(reader);
+		readThread.start();
+	}
+	
+	public void accept(){
+		ProtocolMethod method = new ProtocolMethod("accept", (Object[])null, 0);
+	}
+
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+}

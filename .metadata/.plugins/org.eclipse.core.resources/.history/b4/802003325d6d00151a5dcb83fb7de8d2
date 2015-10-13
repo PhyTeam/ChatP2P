@@ -1,0 +1,10 @@
+package model;
+
+public class TestUserTable {
+	public static void main(String[] args){
+		UserTable ut = new UserTable();
+		String pw = "123";
+		String un = "buibaphuc95@gmail.com";
+		ut.validUserAccount(un, pw);
+	}
+}

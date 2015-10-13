@@ -1,0 +1,28 @@
+package peer;
+
+import java.util.LinkedList;
+
+import controller.CallbackInteface;
+
+public class PeerConnectionReader implements Runnable {
+
+	LinkedList<CallbackInteface> callbacks;
+	PeerConnection connection;
+	
+	public void addCallback(CallbackInteface callback){
+		synchronized (callbacks) {
+			callbacks.add(callback);
+		}
+	}
+	
+	public PeerConnectionReader(PeerConnection connection) {
+		this.connection = connection;
+		callbacks = new LinkedList<CallbackInteface>();
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

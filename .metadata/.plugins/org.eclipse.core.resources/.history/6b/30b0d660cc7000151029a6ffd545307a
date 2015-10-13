@@ -1,0 +1,67 @@
+package server;
+
+import java.awt.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.lang.reflect.Method;
+import java.util.Iterator;
+import java.util.LinkedList;
+
+import controller.CallbackInteface;
+import gui.ConsumerInterface;
+import peer.ProtocolConsummer;
+import protocol.ProtocolInterface;
+import protocol.ProtocolParser;
+import protocol.ProtocolReturn;
+
+public class ServerConnectionReader implements Runnable {
+
+	InputStream in;
+	LinkedList<ProtocolConsummer> consummers;
+	LinkedList<CallbackInteface> callbacks;
+	
+	public void addConsummer(ProtocolConsummer consummer){
+		synchronized (consummers) {
+			consummers.add(consummer);
+		}
+	}
+	
+	public void addCallback(CallbackInteface callback){
+		synchronized (callbacks) {
+			callbacks.add(callback);
+		}
+	}
+	public ServerConnectionReader(ServerConnection client) {
+		try {
+			in = client.getInputStream();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		consummers = new LinkedList<ProtocolConsummer>();
+		callbacks = new LinkedList<CallbackInteface>();
+	}
+	@Override
+	public void run() {
+		ProtocolParser parser = new ProtocolParser(in);
+		// Read protocol 
+		while(true){
+			ProtocolInterface c = parser.read();
+			for (ProtocolConsummer protocolConsummer : consummers) {
+				protocolConsummer.consume(c);
+			}
+			for (CallbackInteface callbackInteface : callbacks) {
+				callbackInteface.onResponse(c);
+				if(c.getType() == "return") {
+					
+					int code  = ((ProtocolReturn) c ).error.code;
+					if(code >= 0) callbackInteface.onSuccess(((ProtocolReturn)c).result);
+					else callbackInteface.onFail(code, ((ProtocolReturn)c).error.message);
+				}
+				
+			}
+		}
+
+	}
+
+}

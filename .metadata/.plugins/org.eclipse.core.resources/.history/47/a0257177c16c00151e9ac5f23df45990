@@ -1,0 +1,9 @@
+package org.json;
+
+public class Main {
+	public static void Main(String[] args){
+		JSONObject object = new JSONObject("{\"method\" : \"active\"}");
+		System.out.println(object.getString("method"));
+		
+	}
+}

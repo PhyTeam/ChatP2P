@@ -1,0 +1,16 @@
+import java.io.Serializable;
+
+public class User implements Serializable {
+
+	/**
+	 * Serial Version UID
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String Email;
+	private String Password;
+	private String FullName;
+	private String Ip;
+	private int Port;
+	private boolean Status;
+}

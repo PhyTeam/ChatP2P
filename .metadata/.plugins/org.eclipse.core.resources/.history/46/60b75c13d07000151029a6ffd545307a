@@ -1,0 +1,70 @@
+package server;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Map;
+
+import controller.CallbackInteface;
+import peer.ProtocolConsummer;
+import protocol.ProtocolInterface;
+import protocol.ProtocolParser;
+import protocol.ProtocolReturn;
+
+public class ServerConnectionReader implements Runnable {
+
+	InputStream in;
+	LinkedList<ProtocolConsummer> consummers;
+	LinkedList<CallbackInteface> callbacks;
+	Map<Integer, CallbackInteface> CallbackConsummers;
+	public void addConsummer(ProtocolConsummer consummer){
+		synchronized (consummers) {
+			consummers.add(consummer);
+		}
+	}
+	
+	public void addCallback(CallbackInteface callback){
+		synchronized (callbacks) {
+			callbacks.add(callback);
+		}
+	}
+	/**
+	 * Add callback for a method with specific id
+	 * @param callback
+	 * @param id
+	 */
+	public void addCallBack(CallbackInteface callback, int id){
+		
+	}
+	public ServerConnectionReader(ServerConnection client) throws IOException {
+		in = client.getInputStream();
+		consummers = new LinkedList<ProtocolConsummer>();
+		callbacks = new LinkedList<CallbackInteface>();
+		CallbackConsummers = new HashMap<>();
+		
+	}
+	@Override
+	public void run() {
+		ProtocolParser parser = new ProtocolParser(in);
+		// Read protocol 
+		while(true){
+			ProtocolInterface c = parser.read();
+			for (ProtocolConsummer protocolConsummer : consummers) {
+				protocolConsummer.consume(c);
+			}
+			for (CallbackInteface callbackInteface : callbacks) {
+				callbackInteface.onResponse(c);
+				if(c.getType() == "return") {
+					ProtocolReturn ret = (ProtocolReturn)callbackInteface;
+					int code  = ret.error.code;
+					if(code >= 0) callbackInteface.onSuccess(ret.result);
+					else callbackInteface.onFail(code, ret.error.message);
+				}
+				
+			}
+		}
+
+	}
+
+}

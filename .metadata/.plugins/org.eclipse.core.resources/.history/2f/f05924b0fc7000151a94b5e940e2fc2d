@@ -1,0 +1,21 @@
+package peer;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+
+public class PeerServerSocket implements Runnable {
+
+	ServerSocket serverSocket;
+	
+	public PeerServerSocket() throws IOException {
+		serverSocket = new ServerSocket();
+		System.out.println("Port " + serverSocket.getLocalPort());
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

@@ -1,0 +1,54 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import java.awt.Panel;
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JLayeredPane;
+
+public class MainApp {
+
+	private JFrame frame;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainApp window = new MainApp();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public MainApp() {
+		initialize();
+	}
+
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 450, 300);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JLayeredPane layeredPane = new JLayeredPane();
+		layeredPane.setBounds(10, 11, 414, 239);
+		frame.getContentPane().add(layeredPane);
+		
+		JPanel panel = new MyPanel();
+		panel.setBounds(0, 0, 10, 10);
+		layeredPane.add(panel);
+	}
+}

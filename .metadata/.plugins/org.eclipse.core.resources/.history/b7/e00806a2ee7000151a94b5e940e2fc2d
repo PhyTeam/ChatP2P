@@ -1,0 +1,14 @@
+package protocol;
+
+public class TestProtocol {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String[] param = new String[]{"Test""};
+		ProtocolMethod p = new ProtocolMethod("getContacts", param, 100);
+		System.out.println(p.toString());
+		
+		ProtocolReturn r = ProtocolMethodExcutor.excute(p);
+		System.out.println(r.toString());
+	}
+}

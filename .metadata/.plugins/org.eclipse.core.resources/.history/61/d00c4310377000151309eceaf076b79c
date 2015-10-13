@@ -1,0 +1,7 @@
+package protocol;
+
+public static class ProtocolMethodExcutor {
+	public static ProtocolReturn excute(ProtocolMethod method){
+		
+	}
+}

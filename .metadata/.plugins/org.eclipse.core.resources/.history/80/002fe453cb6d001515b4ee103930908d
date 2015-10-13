@@ -1,0 +1,13 @@
+import javax.swing.JPanel;
+import java.awt.BorderLayout;
+
+public class MyPanel extends JPanel {
+
+	/**
+	 * Create the panel.
+	 */
+	public MyPanel() {
+
+	}
+
+}

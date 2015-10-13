@@ -1,0 +1,11 @@
+package protocol;
+
+public class TestProtocol {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String[] param = new String[]{"username","password"}
+		ProtocolMethod p = new ProtocolMethod("login", param, 100);
+	}
+
+}

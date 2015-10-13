@@ -1,0 +1,40 @@
+package peer;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+import java.util.LinkedList;
+import java.util.List;
+
+public class PeerServerSocket implements Runnable {
+
+	ServerSocket serverSocket;
+	List<PeerListenerInterface> listener;
+	
+	public void addListener(PeerListenerInterface listenerInterface){
+		listener.add(listenerInterface);
+	}
+	public PeerServerSocket() throws IOException {
+		serverSocket = new ServerSocket(5000);
+		System.out.println("Port " + serverSocket.getLocalPort());
+		listener = new LinkedList<PeerListenerInterface>();
+	}
+	
+	@Override
+	public void run() {
+		while(true){
+			try {
+				Socket socket = serverSocket.accept();
+				System.out.println("Connected.");
+				for (PeerListenerInterface peerListenerInterface : listener) {
+					peerListenerInterface.accept(socket);
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+	}
+
+}

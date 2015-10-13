@@ -1,0 +1,5 @@
+package gui;
+
+public interface ConsumerInterface {
+	public void sendText(String text);
+}

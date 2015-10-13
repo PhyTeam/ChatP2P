@@ -1,0 +1,12 @@
+import javax.swing.JPanel;
+
+public class MyPanel2 extends JPanel {
+
+	/**
+	 * Create the panel.
+	 */
+	public MyPanel2() {
+
+	}
+
+}

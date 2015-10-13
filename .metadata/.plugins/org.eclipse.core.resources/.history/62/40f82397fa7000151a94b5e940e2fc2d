@@ -1,0 +1,19 @@
+package peer;
+
+import java.net.ServerSocket;
+
+public class PeerServerSocket implements Runnable {
+
+	ServerSocket serverSocket;
+	
+	public PeerServerSocket() {
+		serverSocket = new ServerSocket()
+	}
+	
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+
+	}
+
+}

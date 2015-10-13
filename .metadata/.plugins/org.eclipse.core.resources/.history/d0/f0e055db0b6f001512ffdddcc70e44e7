@@ -1,0 +1,21 @@
+package protocol;
+
+import org.json.JSONObject;
+
+public class TestProtocol {
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		String[] param = new String[]{"username","password"};
+		ProtocolMethod p = new ProtocolMethod("login", param, 100);
+		System.out.println(p.toString());
+		JSONObject result = new JSONObject();
+		result.put("name", "Fucc");
+		result.put("FUllname", "gjfd");
+		
+		ProtocolError error=new ProtocolError(-2, "Hello")
+		ProtocolReturn r = new ProtocolReturn("login", result, 0, error);
+		System.out.println(r.toString());
+	}
+
+}

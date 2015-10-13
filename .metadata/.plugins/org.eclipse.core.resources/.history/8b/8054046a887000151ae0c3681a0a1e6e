@@ -1,0 +1,50 @@
+package client;
+
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.Queue;
+import java.util.concurrent.BlockingQueue;
+
+import gui.ConsumerInterface;
+import protocol.ProtocolMethod;
+
+public class SCClient implements Runnable {
+
+	String host = "localhost";
+	int port = 6000;
+	
+	BlockingQueue<ProtocolMethod> method_queue;
+	public SCClient() {
+		// TODO Auto-generated constructor stub
+		method_queue = new LinkedList<ProtocolMethod>();
+	}
+	@Override
+	public void run() {
+		try {
+			Socket socket = new Socket(host, port);
+			OutputStream os = socket.getOutputStream();
+			while(true){
+				method_queue.
+			}
+			
+		} catch (UnknownHostException e) {
+			// Can not connecto to server
+			System.out.println("Can not connect with server");
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+
+	}
+
+}

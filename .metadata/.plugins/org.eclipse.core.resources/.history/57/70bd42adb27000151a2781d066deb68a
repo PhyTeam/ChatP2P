@@ -1,0 +1,7 @@
+package controller;
+
+import protocol.ProtocolInterface;
+
+public interface CallbackInteface {
+	public void onResponse(ProtocolInterface protocolInterface);
+}

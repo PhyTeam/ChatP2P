@@ -1,0 +1,19 @@
+package server;
+
+import org.json.JSONObject;
+
+public class ProtocolMethod {
+	public String method_name;
+	public Object[] method_param;
+	public int id;
+	
+	public ProtocolMethod(String name, Object[] param, int id){
+		method_name = name;
+		method_param = param ;
+		this.id = id;
+	}
+	
+	public JSONObject toJson(){
+		return null;
+	}
+}

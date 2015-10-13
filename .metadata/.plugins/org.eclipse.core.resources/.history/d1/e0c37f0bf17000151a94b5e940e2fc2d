@@ -1,0 +1,10 @@
+package utils;
+
+import java.util.*;
+
+public class TheTimer {
+	public static Timer timer = new Timer();
+	Map<String, TimerTask> listTimer = new HashMap<String, TimerTask>();
+	
+	
+}

@@ -1,0 +1,18 @@
+package test;
+
+import java.io.IOException;
+import java.io.InputStream;
+
+
+public class MyInputStream extends InputStream {
+
+	String sample = "{\"method\" : \"Hello\"}";
+	int i = 0;
+	@Override
+	public int read() throws IOException {
+		byte[] data = sample.getBytes();
+		int ret = (int)data[i++];
+		return ret;
+	}
+
+}

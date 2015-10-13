@@ -1,0 +1,33 @@
+package peer;
+
+import java.io.InputStream;
+import java.util.LinkedList;
+
+import controller.CallbackInteface;
+import protocol.ProtocolParser;
+
+public class PeerConnectionReader implements Runnable {
+
+	LinkedList<CallbackInteface> callbacks;
+	PeerConnection connection;
+	InputStream inputStream;
+	
+	public void addCallback(CallbackInteface callback){
+		synchronized (callbacks) {
+			callbacks.add(callback);
+		}
+	}
+	
+	public PeerConnectionReader(PeerConnection connection) {
+		this.connection = connection;
+		inputStream = connection.getInputConnection();
+		callbacks = new LinkedList<CallbackInteface>();
+	}
+	@Override
+	public void run() {
+		// Create protocol parser
+		ProtocolParser parser = new ProtocolParser(inputStream)
+
+	}
+
+}

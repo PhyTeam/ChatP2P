@@ -1,0 +1,100 @@
+package controller;
+
+import model.User;
+import model.UserTable;
+import protocol.ProtocolError;
+import protocol.*;
+public class Controller {
+	ProtocolMethod protocolMethod;
+	public Controller(ProtocolMethod protocolMethod) {
+		this.protocolMethod = protocolMethod;
+	}
+	/**
+	 * For sign up method
+	 * @return protocol return null and error code
+	 */
+	public ProtocolReturn signup()
+	{
+		Object[] param = protocolMethod.method_param;
+		String username = (String)param[0];
+		String password = (String)param[1];
+		String fullName = (String)param[2];
+		boolean status = false;
+		int port = -1;
+		String ip = "";
+		User user = new User(username, password, fullName, ip, port, status);
+		ProtocolError error = new ProtocolError(0, "Success");
+		try {
+			Cmd_addUser(user);
+		} catch (DuplicateUserName e) {
+			// TODO Auto-generated catch block
+			error = e.getProtocolError();
+		}
+		ProtocolReturn ret = new ProtocolReturn(protocolMethod.method_name,
+				null, protocolMethod.id, error);
+		return null;
+	}
+	
+	public ProtocolReturn login(){
+		Object[] param = protocolMethod.method_param;
+		String username = (String)param[0];
+		String password = (String)param[1];
+		ProtocolError error = new ProtocolError(0, "Success");
+		
+		Cmd_validUser(username, password);
+	}
+	private boolean Cmd_validUser(String un, String pw) throws UserNotFound, PasswordIncorrect{
+		User u = Cmd_findUser(un);
+		if(u.getPassword() != pw) throw new PasswordIncorrect();
+		return true;
+	}
+	private User Cmd_findUser(String username) throws UserNotFound{
+		UserTable userTable = new UserTable();
+		User u = userTable.selectUser(username);
+		if(u == null) throw new UserNotFound();
+		return u;
+	}
+	private void Cmd_addUser(User user) throws DuplicateUserName{
+		UserTable userTable = new UserTable();
+		if(userTable.selectUser(user.getUserName()) != null)
+			throw new DuplicateUserName();
+		userTable.AddUser(user);
+	}
+	
+	public abstract class ControllerException extends Exception{
+		/**
+		 * serial Version UID
+		 */
+		protected static final long serialVersionUID = 1L;
+		protected ProtocolError error;
+		public ProtocolError getProtocolError() {
+			return null;
+		}
+	}
+	public class DuplicateUserName extends ControllerException{
+		private static final long serialVersionUID = -8110052213562314344L;
+		private static final int CODE = -3;
+		public DuplicateUserName() {
+			ProtocolError protocolError = new ProtocolError(CODE, "Duplicate user name");
+			this.error = protocolError;
+		}
+	}
+	
+	public class UserNotFound extends ControllerException{
+
+		private static final long serialVersionUID = 1L;
+		public static final int CODE = -3;
+		public UserNotFound() {
+			error=new ProtocolError(CODE, "User not found");
+		}
+	}
+	
+	public class PasswordIncorrect extends ControllerException{
+
+		private static final long serialVersionUID = 1L;
+		public static final int CODE = -2;
+		public PasswordIncorrect() {
+			error = new ProtocolError(CODE, "Password incorrect");
+		}
+	}
+}
