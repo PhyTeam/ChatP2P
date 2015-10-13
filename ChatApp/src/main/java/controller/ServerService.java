@@ -1,6 +1,7 @@
 package controller;
 
 import java.io.IOException;
+import java.net.UnknownHostException;
 
 import protocol.ProtocolMethod;
 import server.ServerConnectionReader;
@@ -14,7 +15,25 @@ public class ServerService {
 	private int getTransactionId(){
 		return method_ip_counter++;
 	}
+	private static ServerService mService = null;
 	
+	/**
+	 * Get resource server. If there are a server service return it. otherwise 
+	 * create new service and return it
+	 * @return
+	 * @throws UnknownHostException
+	 * @throws IOException
+	 */
+	public static ServerService GetResource() throws UnknownHostException, IOException{
+		if(mService == null)
+		{
+			// create res
+			ServerConnection conn = new ServerConnection();
+			ServerService serverService = new ServerService(conn);
+			mService = serverService;
+		}
+		return mService;
+	}
 	/**
 	 * Create a server communicate with server
 	 * @param conn Server connection
@@ -23,6 +42,9 @@ public class ServerService {
 	public ServerService(ServerConnection conn) throws IOException {
 		connection = conn;
 		reader = new ServerConnectionReader(conn);
+		
+		// Set resource
+		mService = this;
 		// Start connection
 		Thread serverThread = new Thread(conn);
 		serverThread.start();
@@ -63,7 +85,7 @@ public class ServerService {
 		param[1] = password;
 		param[2] = fullname;
 		int transactionId = getTransactionId();
-		ProtocolMethod p = new ProtocolMethod("login", param, transactionId);
+		ProtocolMethod p = new ProtocolMethod("signup", param, transactionId);
 		System.out.println(p.toString());
 		reader.addCallback(callback, transactionId);	
 		connection.write(p);

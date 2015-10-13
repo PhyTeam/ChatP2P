@@ -8,7 +8,7 @@ public class TestProtocol {
 		ProtocolMethod p = new ProtocolMethod("login", param, 100);
 		System.out.println(p.toString());
 		
-		ProtocolReturn r = ProtocolMethodExcutor.excute(p);
-		System.out.println(r.toString());
+		//ProtocolReturn r = ProtocolMethodExcutor.excute(p);
+		//System.out.println(r.toString());
 	}
 }

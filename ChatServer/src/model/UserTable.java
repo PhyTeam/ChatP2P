@@ -56,7 +56,6 @@ public class UserTable {
 				return true;
 			} else return false;
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
@@ -77,7 +76,7 @@ public class UserTable {
 			boolean ret = stat.execute();
 			return ret;
 		} catch (SQLException e) {
-			// TODO: handle exception
+			e.printStackTrace();
 		}
 		return true;
 	}
@@ -149,6 +148,22 @@ public class UserTable {
 			PreparedStatement stat = connection.prepareStatement(sql);
 			stat.setString(1, (status) ? "1" : "0");
 			stat.setString(2, username);
+			boolean ret = stat.execute();
+		} catch (SQLException e) {
+			// TODO: handle exception
+			e.printStackTrace();
+		}
+	}
+	
+	public void updateOnlineStatus(String username, boolean status, String addr, int port){
+		try {
+			Connection connection = getConnection();
+			String sql  = "UPDATE `talkwithme`.`user` SET `Status`=?, `Port`=?, `IP`=? WHERE `UserName`=?;";
+			PreparedStatement stat = connection.prepareStatement(sql);
+			stat.setString(1, (status) ? "1" : "0");
+			stat.setInt(2, port);
+			stat.setString(3, addr);
+			stat.setString(4, username);
 			boolean ret = stat.execute();
 		} catch (SQLException e) {
 			// TODO: handle exception

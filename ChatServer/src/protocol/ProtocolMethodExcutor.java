@@ -6,12 +6,14 @@ import java.lang.reflect.Method;
 import controller.Controller;
 
 public class ProtocolMethodExcutor {
-	public static ProtocolReturn excute(ProtocolMethod method){
+	public static ProtocolReturn excute(Controller mcontroller, ProtocolMethod method){
 		try {
 			Class<?> controller = Class.forName("controller.Controller");
 			//Class[] parameterTypes = new Class[0];
 			Method m = controller.getMethod(method.method_name, (Class<?>[])null);
-			Controller obj = new Controller(method);
+			// set method
+			mcontroller.setMethod(method);
+			Controller obj = mcontroller;
 			Object ret = m.invoke(obj, (Object[])null);
 			return (ProtocolReturn) ret;
 			

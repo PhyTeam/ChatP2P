@@ -1,5 +1,6 @@
 package controller;
 
+import protocol.ProtocolMethod;
 import protocol.ProtocolReturn;
 
 public interface ControllerInterface {
@@ -10,4 +11,5 @@ public interface ControllerInterface {
 	public ProtocolReturn logout();
 	public ProtocolReturn online();
 	
+	public void setMethod(ProtocolMethod method);
 }

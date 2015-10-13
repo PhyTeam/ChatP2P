@@ -1,5 +1,6 @@
 package controller;
 
+import java.net.InetAddress;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -15,6 +16,12 @@ import utils.TheTimer;
 public class Controller implements ControllerInterface {
 	
 	ProtocolMethod protocolMethod;
+	ControllerSession session;
+	
+	public Controller(InetAddress address, int port){
+		protocolMethod = null;
+		session = new ControllerSession(address, port);
+	}
 	
 	public Controller(ProtocolMethod protocolMethod) {
 		this.protocolMethod = protocolMethod;
@@ -38,7 +45,6 @@ public class Controller implements ControllerInterface {
 		try {
 			Cmd_addUser(user);
 		} catch (DuplicateUserName e) {
-			// TODO Auto-generated catch block
 			error = e.getProtocolError();
 		}
 		ProtocolReturn ret = new ProtocolReturn(protocolMethod.method_name,
@@ -64,6 +70,12 @@ public class Controller implements ControllerInterface {
 		} catch (UserNotFound e) {
 			error = e.getProtocolError();
 		}
+		// Login success
+		// Update user status online and update ip and port
+		UserTable userTable = new UserTable();
+		String addr = this.session.addr.getHostAddress();
+		int port = this.session.port;
+		userTable.updateOnlineStatus(username, true, addr, port);
 		
 		ProtocolReturn ret = new ProtocolReturn(protocolMethod.method_name, 
 				(Object[])null, protocolMethod.id, error);
@@ -173,8 +185,7 @@ public class Controller implements ControllerInterface {
 		if(!(u.getPassword().equals(pw))) 
 			throw new PasswordIncorrect();
 		// Login ok
-		UserTable userTable = new UserTable();
-		userTable.updateOnlineStatus(un, true);
+
 		TheTimer.timer.schedule(new TheTimer.OfflineTask(un), TheTimer.DEFAUT_DELAY);
 		return true;
 	}
@@ -228,5 +239,11 @@ public class Controller implements ControllerInterface {
 		public PasswordIncorrect() {
 			error = new ProtocolError(CODE, "Password incorrect");
 		}
+	}
+
+	@Override
+	public void setMethod(ProtocolMethod method) {
+		this.protocolMethod = method;
+		
 	}
 }
