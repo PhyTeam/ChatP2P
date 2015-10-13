@@ -1,0 +1,9 @@
+package org.json;
+
+public class Main {
+	public static void main(String[] args){
+		JSONObject object = new JSONObject("{\"method\" : \"active\"}");
+		JSONObject o = new JSONObject(new JSONTokener(System.in));
+		
+	}
+}

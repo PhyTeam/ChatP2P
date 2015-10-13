@@ -1,0 +1,38 @@
+package peer;
+
+import java.net.Socket;
+
+public class PeerConnection implements Runnable{
+
+	private String host;
+	private int port;
+	
+	private Socket socket;
+	
+	/**
+	 * Init peer connection. This a account will be a client. And <code>ip</code> is a server
+	 * @param ip other peer ip
+	 * @param port other peer port 
+	 */
+	public PeerConnection(String host, int port){
+		this.host = host;
+		this.port = port;
+		// Create a socket connect to other peer
+		socket = new Socket(host, port)
+	}
+	
+	/**
+	 * Just for testing
+	 */
+	public PeerConnection() {
+		// defaut ip and port
+		ip = "localhost";
+		port = 5000;
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

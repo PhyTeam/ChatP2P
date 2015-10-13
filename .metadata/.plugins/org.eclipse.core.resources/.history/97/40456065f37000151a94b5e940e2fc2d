@@ -1,0 +1,23 @@
+package utils;
+
+import java.util.*;
+
+public class TheTimer {
+	public static Timer timer = new Timer();
+	public static Map<String, TimerTask> listTimer = new HashMap<String, TimerTask>();
+	
+	public class OfflineTask extends TimerTask{
+		public int OnlineCheck = 0;
+		
+		public static OfflineTask(String username) {
+			listTimer.put(username, this);
+		}
+		@Override
+		public void run() {
+			if(--OnlineCheck < 0 ){
+				
+			}
+		}
+		
+	}
+}

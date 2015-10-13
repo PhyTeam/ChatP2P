@@ -1,0 +1,51 @@
+package peer;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.LinkedList;
+
+import controller.CallbackInteface;
+import protocol.ProtocolInterface;
+import protocol.ProtocolParser;
+import protocol.ProtocolReturn;
+
+public class PeerConnectionReader implements Runnable {
+
+	LinkedList<CallbackInteface> callbacks;
+	LinkedList<MethodReceiverInterface> receivers;
+	PeerConnection connection;
+	InputStream inputStream;
+	
+	public void addCallback(CallbackInteface callback){
+		synchronized (callbacks) {
+			callbacks.add(callback);
+		}
+	}
+	
+	public PeerConnectionReader(PeerConnection connection) throws IOException {
+		this.connection = connection;
+		inputStream = connection.getInputConnection();
+		callbacks = new LinkedList<CallbackInteface>();
+		receivers = new LinkedList<MethodReceiverInterface>();
+	}
+	@Override
+	public void run() {
+		// Create protocol parser
+		ProtocolParser parser = new ProtocolParser(inputStream);
+		while(true){
+			ProtocolInterface protocol = parser.read();
+			for (CallbackInteface callbackInteface : callbacks) {
+				callbackInteface.onResponse(protocol);
+				if(protocol.getType() == "return") {
+					ProtocolReturn ret = (ProtocolReturn) protocol;
+					int code  = ((ProtocolReturn) protocol ).error.code;
+					if(code >= 0) callbackInteface.onSuccess(ret.result);
+					else callbackInteface.onFail(code, ret.error.message);
+				}
+				
+			}
+		}
+
+	}
+
+}

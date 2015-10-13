@@ -1,0 +1,105 @@
+import java.awt.EventQueue;
+
+import javax.swing.JFrame;
+import java.awt.Panel;
+import java.awt.BorderLayout;
+import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
+import javax.swing.JLayeredPane;
+import javax.swing.JButton;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+
+public class MainApp implements MouseListener{
+
+	private JFrame frame;
+
+	/**
+	 * Launch the application.
+	 */
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
+				try {
+					MainApp window = new MainApp();
+					window.frame.setVisible(true);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		});
+	}
+
+	/**
+	 * Create the application.
+	 */
+	public MainApp() {
+		initialize();
+	}
+
+	int i = 0;
+	private JButton btnNext;
+	JLayeredPane layeredPane;
+	/**
+	 * Initialize the contents of the frame.
+	 */
+	private void initialize() {
+		frame = new JFrame();
+		frame.setBounds(100, 100, 449, 326);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		frame.getContentPane().setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(10, 11, 413, 239);
+		frame.getContentPane().add(panel);
+		panel.setLayout(null);
+		
+		layeredPane = new JLayeredPane();
+		layeredPane.setBounds(0, 0, 413, 239);
+		panel.add(layeredPane);
+		layeredPane.setLayout(null);
+		
+		btnNext = new JButton("Next");
+		btnNext.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				
+			}
+		});
+		btnNext.setBounds(10, 253, 91, 23);
+		frame.getContentPane().add(btnNext);
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		if(e.getSource() == btnNext){
+			layeredPane.add(new MyPanel());
+		}
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+}

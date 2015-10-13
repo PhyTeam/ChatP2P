@@ -1,0 +1,32 @@
+package server;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+public class ProtocolReturn {
+	public ProtocolReturn(String methodName, Object[] result, int id, ProtocolError error) {
+		super();
+		this.methodName = methodName;
+		this.result = result;
+		Id = id;
+		this.error = error;
+	}
+	public String methodName;
+	public Object[] result;
+	public int Id;
+	public ProtocolError error;
+	
+	public JSONObject toJson(){
+		JSONObject ret = new JSONObject();
+		ret.append("return", methodName);
+		JSONArray res = new JSONArray();
+		for (int i = 0; i < result.length; i++) {
+			res.put(result[i].toString());
+		}
+		ret.append("result", res);
+		JSONObject error = error.toJson();
+		
+		ret.append("id", Id);
+		return ret;
+	}
+}

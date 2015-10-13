@@ -1,0 +1,37 @@
+package controller;
+
+import java.io.IOException;
+
+import protocol.ProtocolMethod;
+import server.ServerConnectionReader;
+import server.ServerConnection;
+
+public class ServerService {
+	private ServerConnection connection;
+	private ServerConnectionReader reader;
+	public int method_ip_counter = 1;
+	
+	public int getTransactionId(){
+		return method_ip_counter++;
+	}
+	public ServerService(ServerConnection conn) throws IOException {
+		connection = conn;
+		reader = new ServerConnectionReader(conn);
+		Thread serverThread = new Thread(conn);
+		serverThread.start();
+		Thread readThread = new Thread(reader);
+		readThread.start();
+	}
+	
+	public void login(String username, String password, CallbackInteface callback) throws InterruptedException{
+		String[] param = new String[2];
+		param[0] = username;
+		param[1] = password;
+		int transactionId = getTransactionId();
+		ProtocolMethod p = new ProtocolMethod("login", param, transactionId);
+		System.out.println(p.toString());
+		reader.addCallback(callback, transactionId);	
+		connection.write(p);
+			
+	}
+}

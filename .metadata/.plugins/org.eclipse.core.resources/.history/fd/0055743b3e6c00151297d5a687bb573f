@@ -1,0 +1,107 @@
+package server;
+
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import utils.ChatInputStream;
+import utils.ChatOutputStream;
+
+/**
+ * @author Phuc
+ *
+ */
+public class ChatServer implements Runnable {
+
+	
+	public static final int DEFAUL_PORT = 5000; // Default port
+	private int server_port = DEFAUL_PORT;
+	private ServerSocket serverSocket = null;
+	private boolean IsStoped =false;
+	public StringBuffer stringBuffer;
+	// Output stream handle
+	OutputStream os;
+	public int getServerPort() {
+		return this.server_port;
+	}
+	
+	public String getServerInfo()
+	{
+		String ret =
+				"Ip =  " +
+				this.serverSocket.getInetAddress() +
+				"Port = " + this.serverSocket.getLocalPort();
+		return ret;
+	}
+	public ChatServer(int port) throws IOException
+	{
+		this.server_port = port;
+		serverSocket = new ServerSocket(server_port);
+	}
+	
+	public ChatServer(OutputStream os, int port) {
+		this.os = os;
+		this(port);
+	}
+	/* (non-Javadoc)
+	 * @see java.lang.Runnable#run()
+	 */
+	@Override
+	public void run(){
+		
+		System.out.println("Server has been created at port " + server_port);
+		stringBuffer = new StringBuffer();
+		
+		try
+		{
+			while(!IsStoped) {
+				// Accept client connect request
+				Socket socket = serverSocket.accept();
+				System.out.println("Connected " + socket.getLocalAddress() + ": " + socket.getPort());
+				Thread inputThread = new Thread(new ChatInputStream(socket.getInputStream(), System.out));
+				Thread outputThread = new Thread(new ChatOutputStream(socket.getOutputStream(), System.in));
+				
+				socket.getOutputStream().write("Hello".getBytes());
+				// Start
+				inputThread.start();
+				outputThread.start();
+				
+				/*try {
+					outputThread.join();
+					inputThread.join();
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}*/
+			}
+		}
+		catch (Exception e) {
+			// TODO: handle exception
+		}
+	}
+
+	/**
+	 * @param args
+	 */
+	public static void main(String[] args) {
+		// TODO Auto-generated method stub
+		ChatServer chatServer = null;
+		try {
+			chatServer = new ChatServer(5000);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		Thread thread = new Thread(chatServer);
+		thread.start();
+		
+	}
+
+	public void close() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

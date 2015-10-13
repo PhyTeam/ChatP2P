@@ -1,0 +1,42 @@
+package gui;
+
+import java.awt.EventQueue;
+
+import controller.PeerMethodController;
+import controller.PeerService;
+import protocol.ProtocolMethod;
+
+public class ChatBoxManager extends PeerMethodController {
+
+	PeerService service;
+	public ChatBoxManager(ProtocolMethod method) {
+		super(method);
+		// TODO Auto-generated constructor stub
+	}
+	
+	public ChatBoxManager(ProtocolMethod method, PeerService service) {
+		super(method);
+		this.service = service;
+	}
+	JFriendHGUI frame;
+	@Override
+	public void onAcceptedConnect() {
+		new Thread(new Runnable() {
+			public void run() {
+				try {
+					frame = new JFriendHGUI(service);
+					frame.setVisible(true);
+					System.out.print("HAs been create windown");
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}).start();;
+	}
+	
+	@Override
+	public void onReceiveMessage(String encode, String message) {
+		if(frame != null) frame.log(message);
+		System.out.println("Message : " + message);
+	}
+}

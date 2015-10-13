@@ -1,0 +1,15 @@
+package test;
+
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+public class Main {
+
+	public static void main(String[] args) {
+		JSONObject jsonObject = new JSONObject(new JSONTokener(
+				new MyInputStream()));
+		System.out.println(jsonObject.get("method").toString());;
+
+	}
+
+}

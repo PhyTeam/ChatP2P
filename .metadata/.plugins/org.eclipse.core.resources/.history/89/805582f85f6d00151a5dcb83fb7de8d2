@@ -1,0 +1,45 @@
+package server;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+import utils.ChatInputStream;
+import utils.ChatOutputStream;
+
+
+public class CentralServer implements Runnable{
+	private int port = 6000;
+	
+	private InputStream in;
+	private OutputStream os;
+	
+	public CentralServer() {
+		os = System.out;
+		in = System.in;
+	}
+	@Override
+	public void run() {
+		try {
+			ServerSocket server = new ServerSocket(port);
+			while(true)
+			{
+				Socket socket = server.accept();
+				
+				System.out.println("Connected " + socket.getLocalAddress() + ": " + socket.getPort());
+				Thread inputThread = new Thread(new ChatInputStream(socket.getInputStream(), os));
+				Thread outputThread = new Thread(new ChatOutputStream(socket.getOutputStream(), in));
+				
+				socket.getOutputStream().write("Hello\r\n".getBytes());
+				// Start
+				inputThread.start();
+				outputThread.start();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+}

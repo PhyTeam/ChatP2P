@@ -1,0 +1,10 @@
+package server;
+
+import java.lang.reflect.Method;
+
+public class ProtocolReturn {
+	public String methodName;
+	public Object[] result;
+	public int Id;
+	public ProtocolError error;
+}

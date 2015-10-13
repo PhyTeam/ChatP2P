@@ -1,0 +1,64 @@
+package model;
+import java.io.Serializable;
+
+public class User implements Serializable {
+
+	/**
+	 * Serial Version UID
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String UserName;
+	private String Password;
+	private String FullName;
+	private String Ip;
+	private int Port;
+	private boolean Status;
+	
+	public String getEmail() {
+		return UserName;
+	}
+	public void setEmail(String email) {
+		UserName = email;
+	}
+	public String getPassword() {
+		return Password;
+	}
+	public void setPassword(String password) {
+		Password = password;
+	}
+	public String getFullName() {
+		return FullName;
+	}
+	public void setFullName(String fullName) {
+		FullName = fullName;
+	}
+	public String getIp() {
+		return Ip;
+	}
+	public void setIp(String ip) {
+		Ip = ip;
+	}
+	public int getPort() {
+		return Port;
+	}
+	public void setPort(int port) {
+		Port = port;
+	}
+	public boolean isStatus() {
+		return Status;
+	}
+	public void setStatus(boolean status) {
+		Status = status;
+	}
+	public User(String email, String password, String fullName, String ip, int port, boolean status) {
+		super();
+		UserName = email;
+		Password = password;
+		FullName = fullName;
+		Ip = ip;
+		Port = port;
+		Status = status;
+	}
+	
+}

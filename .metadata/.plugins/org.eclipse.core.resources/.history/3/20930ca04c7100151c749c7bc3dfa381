@@ -1,0 +1,18 @@
+package gui;
+
+import controller.PeerMethodController;
+import protocol.ProtocolMethod;
+
+public class ChatBoxManager extends PeerMethodController {
+
+	public ChatBoxManager(ProtocolMethod method) {
+		super(method);
+		// TODO Auto-generated constructor stub
+	}
+
+	@Override
+	public void onAcceptedConnect() {
+		JFriendHGUI frame = new JFriendHGUI();
+		frame.setVisible(true);
+	}
+}

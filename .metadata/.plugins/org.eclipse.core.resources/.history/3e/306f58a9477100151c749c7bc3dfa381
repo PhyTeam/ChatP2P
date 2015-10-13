@@ -1,0 +1,9 @@
+package controller;
+
+import protocol.ProtocolMethod;
+
+public interface PeerMethodInterface {
+	protected ProtocolMethod method;
+	public void sendMessage();
+	public void accept();
+}

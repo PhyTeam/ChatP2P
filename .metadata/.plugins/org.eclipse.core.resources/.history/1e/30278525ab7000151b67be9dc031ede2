@@ -1,0 +1,27 @@
+package controller;
+
+import client.SCProtocolReader;
+import client.ServerConnection;
+import protocol.ProtocolMethod;
+
+public class ServerService {
+	private ServerConnection connection;
+	private SCProtocolReader reader;
+	public ServerService(ServerConnection conn) {
+		connection = conn;
+		reader = new SCProtocolReader(conn);
+		Thread readThread = new Thread(reader);
+		readThread.start();
+	}
+	
+	public void login(String username, String password, CallbackInteface callback) throws InterruptedException{
+		String[] param = new String[2];
+		param[0] = username;
+		param[1] = password;
+		
+		ProtocolMethod p = new ProtocolMethod("login", param, 100);
+		System.out.println(p.toString());
+		connection.write(p);
+		reader.addCallback(callback);		
+	}
+}

@@ -1,0 +1,28 @@
+package utils;
+
+import java.util.*;
+
+import model.UserTable;
+
+public class TheTimer {
+	public static Timer timer = new Timer();
+	public static Map<String, TimerTask> listTimer = new HashMap<String, TimerTask>();
+	
+	public static class OfflineTask extends TimerTask{
+		public int OnlineCheck = 0;
+		String username;
+		public OfflineTask(String username) {
+			listTimer.put(username, this);
+			this.username = username;
+		}
+		@Override
+		public void run() {
+			if(--OnlineCheck < 0 ){
+				UserTable userTable = new UserTable();
+				userTable.updateOnlineStatus(username, false);
+				System.out.print("Status updated");
+			}
+		}
+		
+	}
+}

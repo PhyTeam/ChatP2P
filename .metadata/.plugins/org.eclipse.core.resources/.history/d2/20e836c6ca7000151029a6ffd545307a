@@ -1,0 +1,27 @@
+package peer;
+
+public class PeerConnection implements Runnable{
+
+	private String ip;
+	private int port;
+	
+	public PeerConnection(String ip, int port){
+		this.ip = ip;
+		this.port = port;
+	}
+	
+	/**
+	 * Just for testing
+	 */
+	public PeerConnection() {
+		// defaut ip and port
+		ip = "localhost";
+		port = 5000;
+	}
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<projectDescription>
+	<name>ChatApp</name>
+	<comment></comment>
+	<projects>
+	</projects>
+	<buildSpec>
+		<buildCommand>
+			<name>org.eclipse.jdt.core.javabuilder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+		<buildCommand>
+			<name>org.eclipse.m2e.core.maven2Builder</name>
+			<arguments>
+			</arguments>
+		</buildCommand>
+	</buildSpec>
+	<natures>
+		<nature>org.eclipse.jdt.core.javanature</nature>
+		<nature>org.eclipse.m2e.core.maven2Nature</nature>
+	</natures>
+	<linkedResources>
+		<link>
+			<name>net</name>
+			<type>2</type>
+			<locationURI>WORKSPACE_LOC/ChatServer/net</locationURI>
+		</link>
+		<link>
+			<name>src/lib</name>
+			<type>2</type>
+			<location>C:/Users/Phuc/workspace/java/assignment1/ChatServer/src</location>
+		</link>
+		<link>
+			<name>src/main/java/org</name>
+			<type>2</type>
+			<location>C:/Users/Phuc/workspace/java/assignment1/ChatServer/src/org</location>
+		</link>
+	</linkedResources>
+</projectDescription>

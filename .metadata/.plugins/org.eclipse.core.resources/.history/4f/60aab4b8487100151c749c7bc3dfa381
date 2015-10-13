@@ -1,0 +1,22 @@
+package controller;
+
+import protocol.ProtocolMethod;
+
+public class PeerMethodController implements PeerMethodInterface{
+
+	public PeerMethodController(ProtocolMethod method) {
+		this.method = method;
+	}
+	@Override
+	public void sendMessage() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void accept() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

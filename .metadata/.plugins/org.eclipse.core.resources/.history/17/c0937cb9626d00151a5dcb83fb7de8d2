@@ -1,0 +1,35 @@
+package server;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.function.Consumer;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+public class ProtocolParser implements Consumer<Object>{
+	public static JSONObject Parser(InputStream in){
+		JSONObject ret = new JSONObject(
+				new JSONTokener(in));
+		return ret;
+	}
+	
+	public static ProtocolMethod getProtocolMethod(JSONObject json){
+		try {
+			String method_name = json.getString("method");
+			JSONArray method_param = json.getJSONArray("param");
+			method_param.forEach(this);
+		} catch (JSONException e) {
+			// TODO: handle exception
+		}
+		return null;
+	}
+
+	@Override
+	public void accept(Object t) {
+		// TODO Auto-generated method stub
+		
+	}
+}

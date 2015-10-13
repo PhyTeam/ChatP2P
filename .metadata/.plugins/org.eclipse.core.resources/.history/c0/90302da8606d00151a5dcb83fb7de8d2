@@ -1,0 +1,15 @@
+package server;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+
+import org.json.JSONObject;
+import org.json.JSONTokener;
+
+public class ProtocolParser{
+	public static JSONObject Parser(InputStream in){
+		JSONObject ret = new JSONObject(
+				new JSONTokener(inputStream))
+	}
+}

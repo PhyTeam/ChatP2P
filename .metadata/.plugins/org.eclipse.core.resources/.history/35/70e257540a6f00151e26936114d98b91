@@ -1,0 +1,36 @@
+package server;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+public class ProtocolMethod {
+	public String method_name;
+	public Object[] method_param;
+	public int id;
+	
+	public ProtocolMethod(String name, Object[] param, int id){
+		method_name = name;
+		method_param = param ;
+		this.id = id;
+	}
+	@Override
+	public String toString() {
+		return this.toJson().toString();
+	}
+	/**
+	 * Return a json object.
+	 * @return
+	 */
+	public JSONObject toJson(){
+		JSONObject ret = new JSONObject();
+		ret.append("method", this.method_name);
+		JSONArray params = new JSONArray();
+		for (int i = 0; i < method_param.length; i++) {
+			Object object = method_param[i];
+			params.put(object);
+		}
+		ret.append("param", params);
+		ret.append("id", id);
+		return null;
+	}
+}

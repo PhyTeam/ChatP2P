@@ -1,0 +1,23 @@
+import java.io.IOException;
+import java.io.OutputStream;
+
+/**
+ * 
+ */
+
+/**
+ * @author Phuc
+ *
+ */
+public class MyOutputStream extends OutputStream {
+
+	/* (non-Javadoc)
+	 * @see java.io.OutputStream#write(int)
+	 */
+	@Override
+	public void write(int arg0) throws IOException {
+		// TODO Auto-generated method stub
+
+	}
+
+}
