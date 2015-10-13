@@ -1,0 +1,36 @@
+package protocol;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+
+public class ProtocolMethodExcutor {
+	public static void excute(ProtocolMethod method, Object Instance){
+		try {
+			Class<?> controller = Class.forName("controller.PeerMethodController");
+			//Class[] parameterTypes = new Class[0];
+			Method m = controller.getMethod(method.method_name, (Class<?>[])null);
+			m.invoke(Instance, (Object[])null);
+			
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NoSuchMethodException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SecurityException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IllegalArgumentException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (InvocationTargetException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+}
+

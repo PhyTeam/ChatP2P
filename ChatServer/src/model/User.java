@@ -1,0 +1,98 @@
+package model;
+import java.io.Serializable;
+
+public class User implements Serializable {
+
+	/**
+	 * Serial Version UID
+	 */
+	private static final long serialVersionUID = 1L;
+
+	private String UserName;
+	private String Password;
+	private String FullName;
+	private String Ip;
+	private int Port;
+	private boolean Status;
+	private String Avatar;
+	private String DateOfBirth;
+	private String Sex;
+	
+	public String getAvatar() {
+		return Avatar;
+	}
+	public void setAvatar(String avatar) {
+		Avatar = avatar;
+	}
+	public String getDateOfBirth() {
+		return DateOfBirth;
+	}
+	public void setDateOfBirth(String dateOfBirth) {
+		DateOfBirth = dateOfBirth;
+	}
+	public String getSex() {
+		return Sex;
+	}
+	public void setSex(String sex) {
+		Sex = sex;
+	}
+	public String getUserName() {
+		return UserName;
+	}
+	public void setUserName(String username) {
+		UserName = username;
+	}
+	public String getPassword() {
+		return Password;
+	}
+	public void setPassword(String password) {
+		Password = password;
+	}
+	public String getFullName() {
+		return FullName;
+	}
+	public void setFullName(String fullName) {
+		FullName = fullName;
+	}
+	public String getIp() {
+		return Ip;
+	}
+	public void setIp(String ip) {
+		Ip = ip;
+	}
+	public int getPort() {
+		return Port;
+	}
+	public void setPort(int port) {
+		Port = port;
+	}
+	public boolean isStatus() {
+		return Status;
+	}
+	public void setStatus(boolean status) {
+		Status = status;
+	}
+	public User(String username, String password, String fullName, String ip, int port, boolean status) {
+		super();
+		UserName = username;
+		Password = password;
+		FullName = fullName;
+		Ip = ip;
+		Port = port;
+		Status = status;
+	}
+	public User(String userName, String password) {
+		super();
+		UserName = userName;
+		Password = password;
+	}
+	public User(String userName, String fullName, String ip, int port, boolean status) {
+		super();
+		UserName = userName;
+		FullName = fullName;
+		Ip = ip;
+		Port = port;
+		Status = status;
+	}
+	
+}
