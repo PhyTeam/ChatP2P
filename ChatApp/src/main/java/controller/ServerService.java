@@ -82,17 +82,31 @@ public class ServerService {
 	 * Get user profiles
 	 * @param username user name.
 	 * @param callback which called when server has response
+	 * @throws InterruptedException 
 	 */
-	public void getProfile(String username, CallbackInteface callback){
-		
+	public void getProfile(String username, CallbackInteface callback) throws InterruptedException{
+		String[] param = new String[1];
+		param[0] = username;
+		int transactionId = getTransactionId();
+		ProtocolMethod p = new ProtocolMethod("getProfile", param, transactionId);
+		System.out.println(p.toString());
+		reader.addCallback(callback, transactionId);	
+		connection.write(p);
 	}
 	
 	/**
 	 * Confirm this client still online. And request update new online list.
 	 * @param callback server return new online list
+	 * @throws InterruptedException 
 	 */
-	public void online(CallbackInteface callback){
-		
+	public void online(String current_user_name, CallbackInteface callback) throws InterruptedException{
+		String[] param = new String[1];
+		param[0] = current_user_name;
+		int transactionId = getTransactionId();
+		ProtocolMethod p = new ProtocolMethod("getProfile", param, transactionId);
+		System.out.println(p.toString());
+		reader.addCallback(callback, transactionId);	
+		connection.write(p);
 	}
 	
 	/**

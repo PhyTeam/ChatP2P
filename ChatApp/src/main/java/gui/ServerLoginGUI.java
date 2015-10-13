@@ -114,7 +114,7 @@ public class ServerLoginGUI implements ProtocolConsummer{
 
 								@Override
 								public void onTimeout() {
-									// TODO Auto-generated method stub
+									
 									
 								}
 							});

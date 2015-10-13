@@ -35,6 +35,7 @@ public class ServerConnection implements Runnable, ProtocolConsummer {
 	public InputStream getInputStream() throws IOException{
 		return socket.getInputStream();
 	}
+
 	@Override
 	public void run() {
 		try {
@@ -47,14 +48,13 @@ public class ServerConnection implements Runnable, ProtocolConsummer {
 					os.write(data);
 					
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
 			}
 			
 		} catch (UnknownHostException e) {
-			// Can not connecto to server
+			// Can not connection to server.
 			System.out.println("Can not connect with server");
 			e.printStackTrace();
 		} catch (IOException e) {
@@ -75,7 +75,6 @@ public class ServerConnection implements Runnable, ProtocolConsummer {
 		Thread t = new Thread(sClient);
 		t.start();
 		t2.start();
-		//sClient.getReader().addConsummer(sClient);
 		sClient.write(p);
 		t.join();
 	}

@@ -6,15 +6,6 @@ import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import org.json.JSONObject;
-
-import protocol.ProtocolMethod;
-import protocol.ProtocolMethodExcutor;
-import protocol.ProtocolParser;
-import protocol.ProtocolReturn;
-import utils.ChatInputStream;
-import utils.ChatOutputStream;
-
 
 public class CentralServer implements Runnable{
 	private int port = 6000;
