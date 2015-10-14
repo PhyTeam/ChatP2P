@@ -1,7 +1,9 @@
 package controller;
 
+import java.util.*;
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.LinkedList;
 
 import protocol.ProtocolMethod;
 import server.ServerConnectionReader;
@@ -11,7 +13,29 @@ public class ServerService {
 	private ServerConnection connection;
 	private ServerConnectionReader reader;
 	public int method_ip_counter = 1;
+	public Session session;
 	
+	public class Session {
+		public String username = null;
+		private List<SessionListener> sessionListeners = new LinkedList<SessionListener>();
+		public void addSessionListener(SessionListener listener){
+			sessionListeners.add(listener);
+		}
+		public void setSession(String username){
+			this.username = username;
+			for (SessionListener sessionListener : sessionListeners) {
+				sessionListener.onLogin(username);
+			}
+		}
+		
+		public void remove(){
+			
+			for (SessionListener sessionListener : sessionListeners) {
+				sessionListener.onLogout(username);	
+			}
+			username = null;
+		}
+	}
 	private int getTransactionId(){
 		return method_ip_counter++;
 	}
@@ -40,6 +64,7 @@ public class ServerService {
 	 * @throws IOException Something went wrong
 	 */
 	public ServerService(ServerConnection conn) throws IOException {
+		session = new Session();
 		connection = conn;
 		reader = new ServerConnectionReader(conn);
 		
@@ -59,14 +84,16 @@ public class ServerService {
 	 * @param callback which called when server has return
 	 * @throws InterruptedException
 	 */
-	public void login(String username, String password, CallbackInteface callback) throws InterruptedException{
-		String[] param = new String[2];
+	public void login(String username, String password, int port, CallbackInteface callback) throws InterruptedException{
+		Object[] param = new Object[3];
 		param[0] = username;
 		param[1] = password;
+		param[2] = port;
 		int transactionId = getTransactionId();
 		ProtocolMethod p = new ProtocolMethod("login", param, transactionId);
 		System.out.println(p.toString());
-		reader.addCallback(callback, transactionId);	
+		reader.addCallback(callback, transactionId);
+		
 		connection.write(p);
 			
 	}
@@ -95,9 +122,17 @@ public class ServerService {
 	 * Request get friend by keyword. By default, if keyword null it will load all friends.
 	 * @param keyword Friend user name. Nullable.
 	 * @param callbackwhich called when server has response
+	 * @throws InterruptedException 
 	 */
-	public void getContacts(String keyword, CallbackInteface callback){
-		
+	public void getContacts(String keyword, CallbackInteface callback) throws InterruptedException{
+		String[] param = new String[1];
+		param[0] = keyword;
+		int transactionId = getTransactionId();
+		ProtocolMethod p = new ProtocolMethod("getContacts", param, transactionId);
+		System.out.println(p.toString());
+		reader.addCallback(callback, transactionId);	
+		System.out.println(p.toString());
+		connection.write(p);
 	}
 	
 	/**
@@ -125,7 +160,7 @@ public class ServerService {
 		String[] param = new String[1];
 		param[0] = current_user_name;
 		int transactionId = getTransactionId();
-		ProtocolMethod p = new ProtocolMethod("getProfile", param, transactionId);
+		ProtocolMethod p = new ProtocolMethod("online", param, transactionId);
 		System.out.println(p.toString());
 		reader.addCallback(callback, transactionId);	
 		connection.write(p);

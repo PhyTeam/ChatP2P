@@ -63,22 +63,6 @@ public class ServerConnection implements Runnable, ProtocolConsummer {
 
 	}
 
-	public static void main(String[] args) throws InterruptedException, UnknownHostException, IOException {
-		ServerConnection sClient = new ServerConnection();
-		ServerConnectionReader reader = new ServerConnectionReader(sClient);
-		reader.addConsummer(sClient);
-		String[] param = new String[]{"buibaphuc95@gmail.com","23"};
-		ProtocolMethod p = new ProtocolMethod("login", param, 100);
-		System.out.println(p.toString());
-		
-		Thread t2 = new Thread(reader);
-		Thread t = new Thread(sClient);
-		t.start();
-		t2.start();
-		sClient.write(p);
-		t.join();
-	}
-
 	@Override
 	public void consume(ProtocolInterface p) {
 		System.out.println(p.toString());

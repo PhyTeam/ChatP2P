@@ -6,14 +6,20 @@ import java.lang.reflect.Method;
 import peer.MethodReceiverInterface;
 import peer.PeerConnection;
 import peer.PeerConnectionReader;
+import protocol.ProtocolInterface;
 import protocol.ProtocolMethod;
 import protocol.ProtocolMethodExcutor;
+import protocol.ProtocolReturn;
 import server.ServerConnection;
 import server.ServerConnectionReader;
 
 public class PeerService {
 	private PeerConnection connection;
 	private PeerConnectionReader reader;
+	
+	public PeerConnection getConnection(){
+		return connection;
+	}
 
 	/**
 	 * Create a peer communicate with peer
@@ -47,9 +53,15 @@ public class PeerService {
 		});
 	}
 	
-	public void accept() throws InterruptedException{
+	public void send(ProtocolInterface r) throws InterruptedException{
+		connection.write(r);
+	}
+	
+	public void accept(CallbackInteface callback) throws InterruptedException{
 		ProtocolMethod method = new ProtocolMethod("accept", new Object[0], 0);
+		System.out.println("sended method: ACCEPT");
 		connection.write(method);
+		reader.addCallback(callback);
 	}
 	
 	public void sendMessage(String text) throws InterruptedException{

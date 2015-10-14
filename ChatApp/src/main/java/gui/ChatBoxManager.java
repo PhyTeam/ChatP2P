@@ -1,10 +1,14 @@
 package gui;
 
 import java.awt.EventQueue;
+import java.io.IOException;
 
 import controller.PeerMethodController;
 import controller.PeerService;
+import controller.ServerService;
+import protocol.ProtocolError;
 import protocol.ProtocolMethod;
+import protocol.ProtocolReturn;
 
 public class ChatBoxManager extends PeerMethodController {
 
@@ -23,13 +27,13 @@ public class ChatBoxManager extends PeerMethodController {
 		super();
 		this.service = service;
 	}
-	JFriendHGUI frame;
+	JChatPanel frame;
 	
 	public void createChatWindown(){
 		new Thread(new Runnable() {
 			public void run() {
 				try {
-					frame = new JFriendHGUI(service);
+					frame = new JChatPanel(service);
 					frame.setVisible(true);
 					System.out.print("HAs been create windown");
 				} catch (Exception e) {
@@ -40,6 +44,22 @@ public class ChatBoxManager extends PeerMethodController {
 	}
 	@Override
 	public void onAcceptedConnect() {
+		ProtocolError error = new ProtocolError(0, "Success");
+		Object[] result = null;
+		try {
+			result = new Object[]{ServerService.GetResource().session.username};
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("<<Accepted>>");
+		ProtocolReturn ret = new ProtocolReturn("accept", result, method.id, error);
+		try {
+			service.send(ret);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		createChatWindown();
 	}
 	

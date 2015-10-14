@@ -1,0 +1,250 @@
+package aurelienribon.slidinglayout.demo;
+
+import aurelienribon.slidinglayout.SLAnimator;
+import aurelienribon.slidinglayout.SLConfig;
+import aurelienribon.slidinglayout.SLKeyframe;
+import aurelienribon.slidinglayout.SLPanel;
+import aurelienribon.slidinglayout.SLSide;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import javax.swing.JFrame;
+
+/**
+ * @author Aurelien Ribon | http://www.aurelienribon.com/
+ */
+public class TheFrame extends JFrame {
+	private final SLPanel panel = new SLPanel();
+	private final ThePanel chatpanel = new ChatPanel("3", "data/img3.jpg");
+	private final ThePanel listfiendpanel = new ListFriendPanel("1", "data/img1.jpg", (ChatPanel)chatpanel  );
+	private final ThePanel searchonserver = new SearchOnServer("2", "data/img2.jpg",(ListFriendPanel)listfiendpanel);
+	
+	private final ThePanel signuppanel = new MyPanel("4", "data/img4.jpg");
+	private final ThePanel loginpanel = new JLoginPanel("5", "data/img5.jpg");
+	private final SLConfig mainCfg, searchonserverCfg, signuppanelCfg, chatpanelCfg, listfiendpanelCfg, loginpanelCfg;
+	//private final SLConfig LoginCfg,ChatCfg,DownloadCfg,searchCfgConfig;
+	public TheFrame() {
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setTitle("Chat App");
+		getContentPane().setBackground(Color.WHITE);
+		getContentPane().add(panel, BorderLayout.CENTER);
+
+		searchonserver.setAction(searchonserverAction);
+		signuppanel.setAction(signuppanelAction);
+		chatpanel.setAction(chatpanelAction);
+		listfiendpanel.setAction(listfiendpanelAction);
+		loginpanel.setAction(loginpanelAction);
+
+		mainCfg = new SLConfig(panel)
+			.gap(10, 10)
+			.row(1f).col(250).col(1f).col(2f)
+			.beginGrid(0, 0)
+				.row(2f).row(1f).col(1f)
+				.place(0, 0, searchonserver)
+				.place(1, 0, signuppanel)
+			.endGrid()
+			.beginGrid(0, 1)
+				.row(1f).row(2f).col(1f)
+				.place(0, 0, chatpanel)
+				.place(1, 0, listfiendpanel)
+			.endGrid()
+			.place(0, 2, loginpanel);
+
+		searchonserverCfg = new SLConfig(panel)
+			.gap(10, 10)
+			.row(1f).col(250).col(1f).col(2f)
+			.place(0, 0, searchonserver)
+			.beginGrid(0, 1)
+				.row(1f).row(2f).col(1f)
+				.place(0, 0, chatpanel)
+				.place(1, 0, listfiendpanel)
+			.endGrid()
+			.place(0, 2, loginpanel);
+
+		signuppanelCfg = new SLConfig(panel)
+			.gap(10, 10)
+			.row(1f).col(2f).col(1f)
+			.beginGrid(0, 0)
+				.row(2f).row(1f).col(1f)
+				.beginGrid(0, 0)
+					.row(1f).col(250).col(1f)
+					.place(0, 0, searchonserver)
+					.place(0, 1, chatpanel)
+				.endGrid()
+				.place(1, 0, signuppanel)
+			.endGrid()
+			.place(0, 1, loginpanel);
+
+		chatpanelCfg = new SLConfig(panel)
+			.gap(10, 10)
+			.row(1f).col(2f).col(1f)
+			.place(0, 0, chatpanel)
+			.place(0, 1, loginpanel);
+
+		listfiendpanelCfg = new SLConfig(panel)
+			.gap(10, 10)
+			.row(1f).row(1f).col(1f).col(1f)
+			.place(0, 0, searchonserver)
+			.place(1, 0, signuppanel)
+			.place(0, 1, chatpanel)
+			.place(1, 1, listfiendpanel);
+
+		loginpanelCfg = new SLConfig(panel)
+			.gap(10, 10)
+			.row(1f).col(1f)
+			.place(0, 0, loginpanel);
+			//.place(0, 1, loginpanel);
+
+		panel.setTweenManager(SLAnimator.createTweenManager());
+		panel.initialize(mainCfg);
+	}
+
+	private void disableActions() {
+		searchonserver.disableAction();
+		signuppanel.disableAction();
+		chatpanel.disableAction();
+		listfiendpanel.disableAction();
+		loginpanel.disableAction();
+	}
+
+	private void enableActions() {
+		searchonserver.enableAction();
+		signuppanel.enableAction();
+		chatpanel.enableAction();
+		listfiendpanel.enableAction();
+		loginpanel.enableAction();
+	}
+
+	private final Runnable searchonserverAction = new Runnable() {@Override public void run() {
+		disableActions();
+
+		panel.createTransition()
+			.push(new SLKeyframe(searchonserverCfg, 0.6f)
+				.setEndSide(SLSide.BOTTOM, signuppanel)
+				.setCallback(new SLKeyframe.Callback() {@Override public void done() {
+					searchonserver.setAction(searchonserverBackAction);
+					searchonserver.enableAction();
+				}}))
+			.play();
+	}};
+
+	private final Runnable searchonserverBackAction = new Runnable() {@Override public void run() {
+		disableActions();
+
+		panel.createTransition()
+			.push(new SLKeyframe(mainCfg, 0.6f)
+				.setStartSide(SLSide.BOTTOM, signuppanel)
+				.setCallback(new SLKeyframe.Callback() {@Override public void done() {
+					searchonserver.setAction(searchonserverAction);
+					enableActions();
+				}}))
+			.play();
+	}};
+
+	private final Runnable signuppanelAction = new Runnable() {@Override public void run() {
+		disableActions();
+
+		panel.createTransition()
+			.push(new SLKeyframe(signuppanelCfg, 0.6f)
+				.setEndSide(SLSide.BOTTOM, listfiendpanel)
+				.setDelay(0.6f, signuppanel)
+				.setCallback(new SLKeyframe.Callback() {@Override public void done() {
+					signuppanel.setAction(signuppanelBackAction);
+					signuppanel.enableAction();
+				}}))
+			.play();
+	}};
+
+	private final Runnable signuppanelBackAction = new Runnable() {@Override public void run() {
+		disableActions();
+
+		panel.createTransition()
+			.push(new SLKeyframe(mainCfg, 0.6f)
+				.setStartSide(SLSide.BOTTOM, listfiendpanel)
+				.setDelay(0.6f, listfiendpanel)
+				.setCallback(new SLKeyframe.Callback() {@Override public void done() {
+					signuppanel.setAction(signuppanelAction);
+					enableActions();
+				}}))
+			.play();
+	}};
+
+	private final Runnable chatpanelAction = new Runnable() {@Override public void run() {
+		disableActions();
+
+		panel.createTransition()
+			.push(new SLKeyframe(chatpanelCfg, 0.8f)
+				.setEndSide(SLSide.LEFT, searchonserver, signuppanel)
+				.setEndSide(SLSide.BOTTOM, listfiendpanel)
+				.setCallback(new SLKeyframe.Callback() {@Override public void done() {
+					chatpanel.setAction(chatpanelBackAction);
+					chatpanel.enableAction();
+				}}))
+			.play();
+	}};
+
+	private final Runnable chatpanelBackAction = new Runnable() {@Override public void run() {
+		disableActions();
+
+		panel.createTransition()
+			.push(new SLKeyframe(mainCfg, 0.8f)
+				.setStartSide(SLSide.LEFT, searchonserver, signuppanel)
+				.setStartSide(SLSide.BOTTOM, listfiendpanel)
+				.setCallback(new SLKeyframe.Callback() {@Override public void done() {
+					chatpanel.setAction(chatpanelAction);
+					enableActions();
+				}}))
+			.play();
+	}};
+
+	private final Runnable listfiendpanelAction = new Runnable() {@Override public void run() {
+		disableActions();
+
+		panel.createTransition()
+			.push(new SLKeyframe(listfiendpanelCfg, 0.6f)
+				.setEndSide(SLSide.RIGHT, loginpanel)
+				.setCallback(new SLKeyframe.Callback() {@Override public void done() {
+					listfiendpanel.setAction(listfiendpanelBackAction);
+					listfiendpanel.enableAction();
+				}}))
+			.play();
+	}};
+
+	private final Runnable listfiendpanelBackAction = new Runnable() {@Override public void run() {
+		disableActions();
+
+		panel.createTransition()
+			.push(new SLKeyframe(mainCfg, 0.6f)
+				.setStartSide(SLSide.RIGHT, loginpanel)
+				.setCallback(new SLKeyframe.Callback() {@Override public void done() {
+					listfiendpanel.setAction(listfiendpanelAction);
+					enableActions();
+				}}))
+			.play();
+	}};
+
+	private final Runnable loginpanelAction = new Runnable() {@Override public void run() {
+		disableActions();
+
+		panel.createTransition()
+			.push(new SLKeyframe(loginpanelCfg, 0.8f)
+				.setEndSide(SLSide.LEFT, searchonserver, signuppanel, chatpanel, listfiendpanel)
+				.setCallback(new SLKeyframe.Callback() {@Override public void done() {
+					loginpanel.setAction(loginpanelBackAction);
+					loginpanel.enableAction();
+				}}))
+			.play();
+	}};
+
+	private final Runnable loginpanelBackAction = new Runnable() {@Override public void run() {
+		disableActions();
+
+		panel.createTransition()
+			.push(new SLKeyframe(mainCfg, 0.8f)
+				.setStartSide(SLSide.LEFT, searchonserver, signuppanel, chatpanel, listfiendpanel)
+				.setCallback(new SLKeyframe.Callback() {@Override public void done() {
+					loginpanel.setAction(loginpanelAction);
+					enableActions();
+				}}))
+			.play();
+	}};
+}

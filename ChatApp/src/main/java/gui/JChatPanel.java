@@ -7,24 +7,63 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.PeerMethodController;
 import controller.PeerService;
 import controller.ServerService;
+import peer.PeerListenerInterface;
+import protocol.ProtocolError;
+import protocol.ProtocolReturn;
 
 import javax.swing.Box;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.Component;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.Socket;
 
-public class JFriendHGUI extends JFrame {
+public class JChatPanel extends JFrame implements PeerListenerInterface {
 
 	private JPanel contentPane;
 	private JTextField tb_msg;
 	JTextArea tb_log;
 	private PeerService peerService;
+	public PeerListener listener = new PeerListener();
+	
+	public class PeerListener extends PeerMethodController{
+		
+		@Override
+		public void onAcceptedConnect() {
+			ProtocolError error = new ProtocolError(0, "Success");
+			Object[] result = null;
+			try {
+				result = new Object[]{ServerService.GetResource().session.username};
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.out.println("<<Accepted>>");
+			ProtocolReturn ret = new ProtocolReturn("accept", result, method.id, error);
+			try {
+				peerService.send(ret);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			log("<<Accepted>>");
+		}
+		
+		@Override
+		public void onReceiveMessage(String encode, String message) {
+			log(message);
+		}
+	}
 	/**
 	 * Launch the application.
 	 */
@@ -32,7 +71,7 @@ public class JFriendHGUI extends JFrame {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				try {
-					JFriendHGUI frame = new JFriendHGUI();
+					JChatPanel frame = new JChatPanel();
 					frame.setVisible(true);
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -44,7 +83,7 @@ public class JFriendHGUI extends JFrame {
 	/**
 	 * Create the frame.
 	 */
-	public JFriendHGUI() {
+	public JChatPanel() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 450, 300);
 		contentPane = new JPanel();
@@ -102,13 +141,23 @@ public class JFriendHGUI extends JFrame {
 		horizontalBox_1.add(lblChatPp);
 	}
 	
-	public JFriendHGUI(PeerService service){
+	public JChatPanel(PeerService service){
 		this();
 		peerService = service;
+		peerService.addMethodDispatch(listener);
 	}
 	
 	public void log(String text){
 		tb_log.setText(tb_log.getText() + '\n' + text);
 		System.out.println("logged");
+	}
+
+	@Override
+	public void accept(Socket socket) {
+		int ans = JOptionPane.showConfirmDialog(null, "Accept?", "Window", JOptionPane.OK_CANCEL_OPTION);
+		if(ans == JOptionPane.OK_OPTION){
+			System.out.println("OK");
+		}
+		
 	}
 }

@@ -7,12 +7,14 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 
+import controller.CallbackInteface;
 import controller.PeerMethodController;
 import controller.PeerService;
 import peer.MethodReceiverInterface;
 import peer.PeerConnection;
 import peer.PeerListenerInterface;
 import peer.PeerServerSocket;
+import protocol.ProtocolInterface;
 import protocol.ProtocolMethod;
 import protocol.ProtocolMethodExcutor;
 
@@ -60,7 +62,7 @@ public class JHomePage extends JFrame implements PeerListenerInterface {
 		
 		// Create server socket
 		try {
-			peerServerSocket = new PeerServerSocket();
+			peerServerSocket = PeerServerSocket.getPeerServerSocket();
 			peerServerSocket.addListener(this);
 			peerServerSocket.start();
 		} catch (IOException e) {
@@ -100,6 +102,7 @@ public class JHomePage extends JFrame implements PeerListenerInterface {
 					PeerConnection connection = new PeerConnection(tb_Ip.getText(), Integer.parseInt(tn_port.getText()));
 					PeerService service = new PeerService(connection);
 					service.addMethodDispatch(new ChatBoxManager(service));
+					
 				} catch (NumberFormatException e1) {
 					// TODO Auto-generated catch block
 					e1.printStackTrace();
@@ -131,15 +134,38 @@ public class JHomePage extends JFrame implements PeerListenerInterface {
 			int confirm = JOptionPane.showConfirmDialog(null, "Accept connect!",
 					"Question", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE);
 			if(confirm == JOptionPane.YES_OPTION){
-				service.accept();
+				service.accept(new CallbackInteface() {
+					
+					@Override
+					public void onTimeout() {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void onSuccess(Object[] result) {
+						System.out.println("OK");
+						
+					}
+					
+					@Override
+					public void onResponse(ProtocolInterface protocolInterface) {
+						// TODO Auto-generated method stub
+						
+					}
+					
+					@Override
+					public void onFail(int errorCode, String message) {
+						// TODO Auto-generated method stub
+						
+					}
+				});
 				ChatBoxManager controller = new ChatBoxManager(service);
 				service.addMethodDispatch(controller);
 				controller.createChatWindown();
-				service.sendMessage("Fuck");
 			}
 			else service.close();
 		} catch (IOException | InterruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}		
 	}

@@ -15,6 +15,12 @@ public class PeerConnection implements Runnable{
 	private String host;
 	private int port;
 	
+	public int getPort(){
+		return this.port;
+	}
+	public String getIp(){
+		return this.host;
+	}
 	private Socket socket;
 	
 	BlockingQueue<ProtocolInterface> queue;

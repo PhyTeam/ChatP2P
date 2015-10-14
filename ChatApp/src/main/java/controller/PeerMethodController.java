@@ -1,6 +1,10 @@
 package controller;
 
+import java.io.IOException;
+
+import protocol.ProtocolError;
 import protocol.ProtocolMethod;
+import protocol.ProtocolReturn;
 
 /**
  * Extends this class to receive method sent
@@ -9,7 +13,7 @@ import protocol.ProtocolMethod;
  */
 public class PeerMethodController implements PeerMethodInterface{
 
-	private ProtocolMethod method;
+	protected ProtocolMethod method;
 	public Object[] getParam(){
 		return method.method_param;
 	}
@@ -35,6 +39,7 @@ public class PeerMethodController implements PeerMethodInterface{
 
 	@Override
 	public void accept() {
+		System.out.println("Accepted called");
 		onAcceptedConnect();		
 	}
 	

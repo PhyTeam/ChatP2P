@@ -3,6 +3,7 @@ package peer;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.Period;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -10,15 +11,18 @@ public class PeerServerSocket extends Thread {
 
 	ServerSocket serverSocket;
 	List<PeerListenerInterface> listener;
+	int port;
 	
 	public void addListener(PeerListenerInterface listenerInterface){
 		listener.add(listenerInterface);
 	}
-	public PeerServerSocket() throws IOException {
+	private PeerServerSocket() throws IOException {
+		peerServerSocket = this;
 		int i = 0;
 		for(i = 0; serverSocket == null && i < 20; i++){
 			try{
-				serverSocket = new ServerSocket(5000 + i);
+				port = 5000 + i;
+				serverSocket = new ServerSocket(port);
 			} catch (IOException e) {
 		
 			}
@@ -34,16 +38,25 @@ public class PeerServerSocket extends Thread {
 		while(true){
 			try {
 				Socket socket = serverSocket.accept();
-				System.out.println("Connected.");
 				for (PeerListenerInterface peerListenerInterface : listener) {
 					peerListenerInterface.accept(socket);
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
 		}
+	}
+	public static PeerServerSocket peerServerSocket = null;
+	
+	public static PeerServerSocket getPeerServerSocket() throws IOException{
+		if(peerServerSocket == null)
+			peerServerSocket = new PeerServerSocket();
+		return peerServerSocket;
+	}
+	
+	public int getPort() {
+		return port;
 	}
 
 }
