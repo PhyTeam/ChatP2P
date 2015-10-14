@@ -15,6 +15,8 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 import javax.swing.JButton;
+import javax.swing.JFrame;
+
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.net.UnknownHostException;
@@ -35,10 +37,13 @@ public class JSignupPanel extends JPanel {
 	private JLabel lblngKTi;
 	ServerConnection connection;
 	ServerService service;
+	
+	MainFrameInterface parent;
 	/**
 	 * Create the panel.
 	 */
-	public JSignupPanel() {
+	public JSignupPanel(MainFrameInterface frame) {
+		parent = frame;
 		setLayout(null);
 		try {
 			connection = new ServerConnection();
@@ -53,7 +58,7 @@ public class JSignupPanel extends JPanel {
 		
 		
 		lblngKTi = new JLabel("\u0110\u0102NG K\u00CD T\u00C0I KHO\u1EA2N");
-		lblngKTi.setBounds(6, 6, 452, 44);
+		lblngKTi.setBounds(6, 29, 452, 44);
 		lblngKTi.setFont(new Font("Tahoma", Font.PLAIN, 30));
 		lblngKTi.setHorizontalAlignment(SwingConstants.CENTER);
 		add(lblngKTi);
@@ -132,7 +137,15 @@ public class JSignupPanel extends JPanel {
 		add(tb_fullname);
 		tb_fullname.setColumns(10);
 		add(btn_Signup);
+		
+		JButton btnBack = new JButton("Back");
+		btnBack.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent arg0) {
+				parent.showLoginPanel();
+			}
+		});
+		btnBack.setBounds(369, 265, 89, 23);
+		add(btnBack);
 
 	}
-
 }
