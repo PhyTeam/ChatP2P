@@ -58,5 +58,8 @@ public class PeerServerSocket extends Thread {
 	public int getPort() {
 		return port;
 	}
+	public String getIP() {
+		return serverSocket.getInetAddress().getHostAddress();
+	}
 
 }

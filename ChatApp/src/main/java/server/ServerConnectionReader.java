@@ -28,7 +28,7 @@ public class ServerConnectionReader implements Runnable {
 	
 	public void addCallback(CallbackInteface callback){
 		synchronized (callbacks) {
-			callbacks.add(callback);
+			if(callback != null)callbacks.add(callback);
 		}
 	}
 	/**
@@ -38,8 +38,7 @@ public class ServerConnectionReader implements Runnable {
 	 */
 	public void addCallback(CallbackInteface callback, int id){
 		synchronized (CallbackConsummers) {
-			CallbackConsummers.put(new Integer(id), callback);
-			System.out.println(CallbackConsummers.size());
+			if(callback != null)CallbackConsummers.put(new Integer(id), callback);
 		}
 	}
 	
@@ -61,7 +60,7 @@ public class ServerConnectionReader implements Runnable {
 		// Read protocol 
 		while(true){
 			ProtocolInterface c = parser.read();
-			
+			//System.out.println(c);
 			for (CallbackInteface callbackInteface : callbacks) {
 				callbackInteface.onResponse(c);
 				if(c.getType() == "return") {

@@ -30,7 +30,7 @@ public class ThePanel extends JPanel {
 	private static final TweenManager tweenManager = SLAnimator.createTweenManager();
 	private final JLabel label = new JLabel();
 	private BufferedImage bgImg;
-	private Runnable action;
+	protected Runnable action;
 	private boolean actionEnabled = true;
 	private boolean hover = false;
 	private int borderThickness = 2;

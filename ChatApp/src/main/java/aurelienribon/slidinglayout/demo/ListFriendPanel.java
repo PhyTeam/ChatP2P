@@ -7,6 +7,7 @@ import javax.swing.JFrame;
 import java.awt.*;
 
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.ListSelectionModel;
 import javax.swing.JLabel;
 
@@ -127,20 +128,22 @@ public class ListFriendPanel extends ThePanel implements SessionListener, PeerLi
 				{
 					String selectedUsername = list_view.get(list_fri.getSelectedIndex());
 					// Create peer connect
-					System.out.println(listFriend.toString());
+					//System.out.println(listFriend.toString());
 					Friend friend = listFriend.get(selectedUsername);
-					System.out.println(friend);
+					//System.out.println(friend);
 					String host  = friend.ip;
 					int port = friend.port;
 					try {
 						PeerConnection connection = new PeerConnection(host, port);
 						PeerService service = new PeerService(connection);
-						System.out.println("Create connect to " + host + ":" + port);
+						//System.out.println("Create connect to " + host + ":" + port);
 						ChatEntityPanel chatEntityPanel = chatpanel.CreateTab(list_view.get(list_fri.getSelectedIndex()));
 						chatEntityPanel.setPeerService(service);
 						chatEntityPanel.setUsername(friend.username);
 					
 					} catch (IOException e) {
+						JOptionPane.showMessageDialog(null, "Sorry! This user may be offline");
+						list_viewstt.set(list_fri.getSelectedIndex(), selectedUsername + " Offline");
 						e.printStackTrace();
 					}
 				}
@@ -291,7 +294,7 @@ public class ListFriendPanel extends ThePanel implements SessionListener, PeerLi
 				@Override
 				public void onSuccess(Object[] result) {
 					resolveListFriend(result);
-					timer.schedule(new OnlineCheckerTimerTask(), delayTime);
+					//timer.schedule(new OnlineCheckerTimerTask(), delayTime);
 				}
 				
 				@Override
@@ -319,7 +322,7 @@ public class ListFriendPanel extends ThePanel implements SessionListener, PeerLi
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		timer.schedule(timerTask, delayTime);
+		timer.scheduleAtFixedRate(timerTask, delayTime, delayTime);
 	}
 
 	@Override
@@ -383,8 +386,9 @@ public class ListFriendPanel extends ThePanel implements SessionListener, PeerLi
 		java.util.List<String> usernames = new LinkedList<String>();
 		java.util.List<String> stt = new LinkedList<String>();
 		for (Object object : result) {
-			//System.out.println(object);
+			System.out.println(object);
 			JSONObject user = (JSONObject)object;
+			//System.out.println(user);
 			String username  = (String) user.get("username");
 			String ip = (String)user.get("Ip");
 			int port = (int)user.get("Port");

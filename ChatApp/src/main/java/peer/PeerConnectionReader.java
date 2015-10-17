@@ -21,12 +21,12 @@ public class PeerConnectionReader implements Runnable {
 	InputStream inputStream;
 	public void addMethodReceiver(MethodReceiverInterface receiverInterface){
 		synchronized (receivers) {
-			receivers.add(receiverInterface);
+			if(callbacks!=null)receivers.add(receiverInterface);
 		}
 	}
 	public void addCallback(CallbackInteface callback){
 		synchronized (callbacks) {
-			callbacks.add(callback);
+			if(callback != null)callbacks.add(callback);
 		}
 	}
 	
@@ -43,7 +43,6 @@ public class PeerConnectionReader implements Runnable {
 		while(true){
 			ProtocolInterface protocol = parser.read();
 			// Show me
-			System.out.println("Fuck");
 			// Accept method
 			if(protocol.getType().equals("method")){
 				ProtocolMethod method = (ProtocolMethod)protocol;
@@ -80,7 +79,7 @@ public class PeerConnectionReader implements Runnable {
 			}
 			// Send to method listener
 			for (MethodReceiverInterface methodReceiverInterface : receivers) {
-				System.out.println(methodReceiverInterface.toString());
+				//System.out.println(methodReceiverInterface.toString());
 				if(protocol.getType().equals("method")){
 					methodReceiverInterface.onReceive((ProtocolMethod)protocol);
 				}

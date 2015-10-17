@@ -1,5 +1,7 @@
 package controller;
 
+import java.awt.Point;
+import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Method;
 
@@ -17,6 +19,7 @@ public class PeerService {
 	private PeerConnection connection;
 	private PeerConnectionReader reader;
 	
+	int counter = 0;
 	public PeerConnection getConnection(){
 		return connection;
 	}
@@ -59,7 +62,7 @@ public class PeerService {
 	
 	public void accept(CallbackInteface callback) throws InterruptedException{
 		ProtocolMethod method = new ProtocolMethod("accept", new Object[0], 0);
-		System.out.println("sended method: ACCEPT");
+		//System.out.println("sended method: ACCEPT");
 		connection.write(method);
 		reader.addCallback(callback);
 	}
@@ -71,7 +74,31 @@ public class PeerService {
 		ProtocolMethod method = new ProtocolMethod("sendMessage", param, 0);
 		connection.write(method);
 	}
+	
+	public void sendFile(String filename, int size, CallbackInteface callbackInteface) throws InterruptedException{
+		Object[] param = new Object[2];
+		param[0] = filename;
+		param[1] = size;
+		ProtocolMethod method = new ProtocolMethod("sendFile", param, counter++);
+		connection.write(method);
+		reader.addCallback(callbackInteface);
+	}
 
+	public void sendCaro(Point point) throws InterruptedException{
+		Object[] param = new Object[2];
+		param[0] = point.getX();
+		param[1] = point.getY();
+		ProtocolMethod method = new ProtocolMethod("sendCaro", param, counter++);
+		connection.write(method);
+	}
+	
+	public void invite(CallbackInteface callbackInteface) throws InterruptedException{
+		
+		ProtocolMethod method = new ProtocolMethod("invite",new Object[0], counter++);
+		connection.write(method);
+		reader.addCallback(callbackInteface);
+	}
+	
 	public void close() {
 		// TODO Auto-generated method stub
 		

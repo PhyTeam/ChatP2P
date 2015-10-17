@@ -5,6 +5,12 @@ import javax.swing.JPanel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JTextField;
+
+import controller.CallbackInteface;
+import controller.PeerService;
+import peer.FileTransferClient;
+import protocol.ProtocolInterface;
+
 import javax.swing.JInternalFrame;
 import javax.swing.JProgressBar;
 import javax.swing.JSplitPane;
@@ -14,10 +20,13 @@ import javax.swing.JSpinner;
 import java.awt.List;
 import java.awt.ScrollPane;
 import javax.swing.JMenu;
+import javax.swing.JOptionPane;
 import javax.swing.JList;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
+import java.io.IOException;
+
 import javax.swing.JTabbedPane;
 
 public class LoadFile extends ThePanel {
@@ -26,6 +35,9 @@ public class LoadFile extends ThePanel {
 	private JFileChooser fc;
 	private File f;
 	public JTabbedPane tabbedPane = null;
+	public String currentUser;
+	public PeerService service;
+	protected File uploadFile;
 	/**
 	 * Create the panel.
 	 */
@@ -63,6 +75,15 @@ public class LoadFile extends ThePanel {
 		JButton btnAttach = new JButton("Attach");
 		btnAttach.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				File file = new File(textField.getText());
+				uploadFile = file;
+				try {
+					if(service ==null) System.out.println("Not yet!");
+					else service.sendFile(file.getName(), (int)file.length(), sendFileCallback);
+				} catch (InterruptedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 				CreateProgressTab(f.getName());
 			}
 		});
@@ -116,5 +137,45 @@ public class LoadFile extends ThePanel {
 			panel.add(btnStop);
 		}
 			
+	}
+
+	CallbackInteface sendFileCallback = new CallbackInteface() {
+		
+		@Override
+		public void onTimeout() {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void onSuccess(Object[] result) {
+			String host = (String)result[1];
+			int port = (int)result[0];
+			
+			//JOptionPane.showMessageDialog(null, "send file " + port);
+			uploadFile(host,port);
+		}
+		
+		@Override
+		public void onResponse(ProtocolInterface protocolInterface) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+		@Override
+		public void onFail(int errorCode, String message) {
+			JOptionPane.showMessageDialog(null, "can not send file");
+			
+		}
+	};
+	void uploadFile(String host, int port){
+		try {
+			FileTransferClient server = new FileTransferClient(uploadFile.getPath(), host, port);
+			server.start();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 	}
 }

@@ -1,6 +1,8 @@
 package controller;
 
+import java.awt.Point;
 import java.io.IOException;
+import java.lang.reflect.Parameter;
 
 import protocol.ProtocolError;
 import protocol.ProtocolMethod;
@@ -47,6 +49,38 @@ public class PeerMethodController implements PeerMethodInterface{
 		
 	}
 	public void onAcceptedConnect(){
+		
+	}
+
+	@Override
+	public void sendFile() {
+		Object[] parem = getParam();
+		String filename = (String)parem[0];
+		int size = (int)parem[1];
+		onReceiveFile(filename, size);
+		
+	}
+	
+	protected void onReceiveFile(String filename, int size) {
+		
+		
+	}
+
+	@Override
+	public void sendCaro() {
+		Object[] ret = getParam();
+		int x = (int) ret[0];
+		int y = (int) ret[1];
+		onCaroMessage(new Point(x, y));
+		
+	}
+	
+	protected void onCaroMessage(Point point) {
+		
+	}
+
+	@Override
+	public void invite() {
 		
 	}
 }

@@ -161,6 +161,16 @@ public class ServerService {
 		param[0] = current_user_name;
 		int transactionId = getTransactionId();
 		ProtocolMethod p = new ProtocolMethod("online", param, transactionId);
+		//System.out.println(p.toString());
+		reader.addCallback(callback, transactionId);	
+		connection.write(p);
+	}
+	
+	public void search(String keyword, CallbackInteface callback) throws InterruptedException{
+		String[] param = new String[1];
+		param[0] = keyword;
+		int transactionId = getTransactionId();
+		ProtocolMethod p = new ProtocolMethod("search", param, transactionId);
 		System.out.println(p.toString());
 		reader.addCallback(callback, transactionId);	
 		connection.write(p);
@@ -173,4 +183,5 @@ public class ServerService {
 	public void logout(CallbackInteface callback){
 		connection.logout();
 	}
+
 }

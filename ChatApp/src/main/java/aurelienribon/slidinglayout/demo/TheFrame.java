@@ -6,6 +6,7 @@ import aurelienribon.slidinglayout.SLKeyframe;
 import aurelienribon.slidinglayout.SLPanel;
 import aurelienribon.slidinglayout.SLSide;
 import controller.ServerService;
+import controller.SessionListener;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -44,6 +45,7 @@ public class TheFrame extends JFrame {
 		loginpanel.setAction(loginpanelAction);
 		loadfilepanel.setAction(loadfilepanelAction);
 		
+		((ChatPanel)chatpanel).loadFile = (LoadFile) loadfilepanel;
 		LoginCfg = new SLConfig(panel)
 			.gap(10, 10)
 			.row(1f).col(1f)
@@ -59,7 +61,7 @@ public class TheFrame extends JFrame {
 			.row(1f).col(2f).col(1f)
 			//.place(0, 0, searchonserver)
 			.beginGrid(0, 0)
-				.row(4f).row(1f).col(1f)
+				.row(6f).row(1f).col(1f)
 				.place(0, 0, chatpanel)
 				.place(1, 0, loadfilepanel)
 			.endGrid()
@@ -233,7 +235,8 @@ public class TheFrame extends JFrame {
 		}
 		// Setup session
 		try {
-			ServerService.GetResource().session.addSessionListener((ListFriendPanel)listfiendpanel);
+			ServerService.GetResource().session.addSessionListener((SessionListener)listfiendpanel);
+			ServerService.GetResource().session.addSessionListener((SessionListener)profile);
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

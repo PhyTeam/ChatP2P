@@ -6,9 +6,18 @@ import javax.swing.JButton;
 import javax.swing.JList;
 import javax.swing.ListSelectionModel;
 
+import org.json.JSONObject;
+
+import controller.CallbackInteface;
+import controller.ServerService;
+import model.Friend;
+import protocol.ProtocolInterface;
+
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.util.LinkedList;
 
 public class SearchOnServer extends ThePanel {
 	/**
@@ -46,7 +55,37 @@ public class SearchOnServer extends ThePanel {
 			public void mouseClicked(MouseEvent arg0) {
 				String keyword = txtSearch.getText();
 				// TODO : Server search
-				
+				try {
+					ServerService.GetResource().search(keyword, new CallbackInteface() {
+						
+						@Override
+						public void onTimeout() {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onSuccess(Object[] result) {
+							resolveListFriend(result);
+							
+						}
+						
+						@Override
+						public void onResponse(ProtocolInterface protocolInterface) {
+							
+							
+						}
+						
+						@Override
+						public void onFail(int errorCode, String message) {
+							// TODO Auto-generated method stub
+							
+						}
+					});
+				} catch (InterruptedException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 
 			}
@@ -131,5 +170,23 @@ public class SearchOnServer extends ThePanel {
 	}
 	public boolean getlogout(){
 		return this.blogout;
+	}
+	
+	protected void resolveListFriend(Object[] result){
+		java.util.List<String> usernames = new LinkedList<String>();
+		java.util.List<String> stt = new LinkedList<String>();
+		for (Object object : result) {
+			System.out.println(object);
+			JSONObject user = (JSONObject)object;
+			//System.out.println(user);
+			String username  = (String) user.get("username");
+			String ip = (String)user.get("Ip");
+			int port = (int)user.get("Port");
+			String status = ((boolean) user.get("Status"))? "offline" : "online";
+			usernames.add(username);
+			stt.add(status);
+			
+		}
+		setFriendList(usernames, stt);
 	}
 }

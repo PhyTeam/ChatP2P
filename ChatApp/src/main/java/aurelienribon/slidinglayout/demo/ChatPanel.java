@@ -12,8 +12,14 @@ import java.awt.SystemColor;
 import javax.swing.JTextField;
 import javax.swing.JButton;
 import java.awt.Font;
-import javax.swing.UIManager;
+import java.awt.Panel;
 
+import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
+import javax.swing.text.TabExpander;
+
+import caro.CaroFrame;
 import controller.CallbackInteface;
 import controller.PeerService;
 import controller.ServerService;
@@ -23,6 +29,8 @@ import peer.PeerServerSocket;
 import protocol.ProtocolInterface;
 
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.ActionEvent;
 import java.io.File;
 import java.io.IOException;
@@ -35,7 +43,7 @@ import javax.swing.SwingConstants;
 
 public class ChatPanel extends ThePanel implements PeerListenerInterface {
 	public JTabbedPane tab1 = null;
-	
+	public LoadFile loadFile = null;
 	public String currentUser()
 	{
 		/**
@@ -104,6 +112,48 @@ public class ChatPanel extends ThePanel implements PeerListenerInterface {
 				tab1.setForeground(null);
 				tab1.setBorder(null);
 				add(tab1);
+				tab1.addChangeListener(new ChangeListener() {
+					
+					@Override
+					public void stateChanged(ChangeEvent e) {
+						if(loadFile != null){
+							loadFile.currentUser = currentUser();
+							ChatEntityPanel entityPanel = (ChatEntityPanel) tab1.getComponentAt(tab1.getSelectedIndex());
+							loadFile.service = entityPanel.peerService;
+						}
+					}
+				});
+				tab1.addMouseListener(new MouseListener() {
+					
+					@Override
+					public void mouseReleased(MouseEvent e) {
+						if(loadFile != null){
+							loadFile.currentUser = currentUser();
+							ChatEntityPanel entityPanel = (ChatEntityPanel) tab1.getComponentAt(tab1.getSelectedIndex());
+							loadFile.service = entityPanel.peerService;
+						}
+					}
+					
+					@Override
+					public void mousePressed(MouseEvent e) {
+						
+					}
+					
+					@Override
+					public void mouseExited(MouseEvent e) {
+						
+					}
+					
+					@Override
+					public void mouseEntered(MouseEvent e) {
+						
+					}
+					
+					@Override
+					public void mouseClicked(MouseEvent e) {
+						
+					}
+				});
 				final JPanel panel = new ChatEntityPanel();
 				ret = (ChatEntityPanel) panel;
 				panel.setBackground(SystemColor.activeCaptionBorder);
@@ -142,9 +192,8 @@ public class ChatPanel extends ThePanel implements PeerListenerInterface {
 				AttachBtn.setBounds(10, 371, 51, 40);
 				AttachBtn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						/** 
-						 * Go to LoadFile Panel
-						 */
+						//LoadFile((ChatEntityPanel) panel);
+						caroInit((ChatEntityPanel)panel);
 				}});
 				AttachBtn.setBorder(null);
 				panel.add(AttachBtn);
@@ -208,9 +257,7 @@ public class ChatPanel extends ThePanel implements PeerListenerInterface {
 				AttachBtn.setBounds(10, 371, 51, 40);
 				AttachBtn.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						/** 
-						 * Go to LoadFile Panel
-						 */
+						LoadFile((ChatEntityPanel) panel);
 				}});
 				AttachBtn.setBorder(null);
 				panel.add(AttachBtn);
@@ -235,6 +282,9 @@ public class ChatPanel extends ThePanel implements PeerListenerInterface {
 		ret.setParent(this);
 		return ret;
 	}
+	/*
+	 * Da xong
+	 */
 	public void ReceiveFile(File f,String UserName)
 	{
 		final JPanel panel = new JPanel();
@@ -279,11 +329,6 @@ public class ChatPanel extends ThePanel implements PeerListenerInterface {
 	public ChatPanel(String name, String path) {
 		super(name,path);
 		setLayout(null);
-		CreateTab("hi");
-		CreateTab("Nguyen thi lung linh");
-		receiveMess("hi","hi");
-		receiveMess("hiii","Nguyen thi lung linh");
-		receiveMess("dmm","Nguyen thi lung linh");
 		// Add peer listener
 		attachPeerListener();
 	}
@@ -335,6 +380,52 @@ public class ChatPanel extends ThePanel implements PeerListenerInterface {
 		}
 		
 	}
+	private void LoadFile(ChatEntityPanel panel){
+		try {
+			panel.peerService.sendFile("ff.pdf", 1000, null);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 	
-	
+	private void caroInit(ChatEntityPanel panel) {
+		try {
+			panel.peerService.invite(new CallbackInteface() {
+				
+				@Override
+				public void onTimeout() {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onSuccess(Object[] result) {
+					new Thread(new Runnable() {
+						
+						@Override
+						public void run() {
+							new CaroFrame(panel.peerService);
+							
+						}
+					}).start();
+				}
+				
+				@Override
+				public void onResponse(ProtocolInterface protocolInterface) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onFail(int errorCode, String message) {
+					// TODO Auto-generated method stub
+					
+				}
+			});
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

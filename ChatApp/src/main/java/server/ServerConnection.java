@@ -12,6 +12,7 @@ import java.util.concurrent.ArrayBlockingQueue;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
 
+import global.GlobalEnv;
 import gui.ConsumerInterface;
 import peer.ProtocolConsummer;
 import protocol.ProtocolInterface;
@@ -19,8 +20,8 @@ import protocol.ProtocolMethod;
 
 public class ServerConnection implements Runnable, ProtocolConsummer {
 
-	String host = "localhost";
-	int port = 6000;
+	String host =  GlobalEnv.ip;
+	int port = GlobalEnv.port;
 	ServerConnectionReader ireader;
 	BlockingQueue<ProtocolInterface> method_queue;
 	Socket socket;
